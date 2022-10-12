@@ -1,6 +1,11 @@
-# Getting Started with Create React App
+# COL732 Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Installation
+1. Install [Node.js](https://nodejs.org/en/)
+2. Clone this repo: `git clone https://github.com/Kevin-379/COL762-frontend.git`
+3. cd COL762-frontend
+4. npm install
+5. npm start
 
 ## Available Scripts
 
