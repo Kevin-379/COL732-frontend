@@ -15,7 +15,7 @@ export const SignIn = () => {
 
   return (
     <Container maxWidth="xs">
-      <Box alignItems={"center"} display={"flex"} flexDirection={"column"} sx={{ mt: 12 }}>
+      <Box alignItems={"center"} display={"flex"} flexDirection={"column"} sx={{ mt: 10 }}>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>

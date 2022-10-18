@@ -1,23 +1,20 @@
-import { Box, CssBaseline, ThemeProvider, ToggleButton } from "@mui/material";
+import { Box, CssBaseline, Switch, ThemeProvider } from "@mui/material";
 import { SignIn } from "./pages/SignIn";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { useState } from "react";
 import { lightTheme, darkTheme } from "./theme";
 
 function App() {
-  const [lightMode, setLightMode] = useState(true);
-  const icon = lightMode ? <LightMode /> : <DarkMode />;
-  const theme = (lightMode ? lightTheme : darkTheme);
+  const [darkMode, setDarkMode] = useState(true);
+  const theme = (darkMode ? darkTheme: lightTheme);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box textAlign={"center"} sx={{ mt: 2 }}>
-        <ToggleButton value="Theme" onChange={() => setLightMode(!lightMode)}>
-          {icon}
-        </ToggleButton>
-        <br />
-        Toggle Theme
+      <Box textAlign={"center"} alignItems={"center"} display="flex" justifyContent={"center"} sx={{ mt: 2 }}>
+        <LightMode fontSize={"small"} />
+        <Switch onChange={(e) => setDarkMode(e.target.checked)}></Switch>
+        <DarkMode fontSize={"small"} />
       </Box>
       <SignIn />
     </ThemeProvider>
