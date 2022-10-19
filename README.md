@@ -5,7 +5,12 @@
 2. Clone this repo: `git clone https://github.com/Kevin-379/COL762-frontend.git`
 3. cd COL762-frontend
 4. npm install
-5. npm start
+6. npm install axios
+7  npm install @mui/material @emotion/react @emotion/styled
+8. npm install @fontsource/roboto
+9. npm install @mui/icons-material
+10. npm install --save typescript @types/node @types/react @types/react-dom @types/jest
+11. npm start
 
 ## Available Scripts
 
