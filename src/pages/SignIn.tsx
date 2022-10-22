@@ -8,10 +8,46 @@ import {
   Link,
   TextField,
   Typography,
+  Alert
 } from "@mui/material";
+import axios from "axios";
+import { useState } from "react";
+
+//TODO - make the role select instead of text
 
 export const SignIn = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => { event.preventDefault() };
+  const [role,setRole] = useState('Student');
+  const [fail, setFail] = useState('');
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try{
+      const target = e.target as typeof e.target & {
+        entry_no: { value: string };
+        role: {value: string};
+        password: { value: string };
+      };
+      //console.log(target.entry_no.value);
+      axios.post('/user/login',{entry_no:target.entry_no.value, role: target.role.value,
+        password:target.password.value}).then(res =>{
+          if(res.status === 201){
+            console.log("Login successful");
+            //switchTab
+            setFail('');
+          }else{
+            setFail("Record not found");
+          }
+        }).catch( err => {
+          setFail("Record not found");
+        })
+    }catch(error){
+      let result = (error as Error).message;
+      // we'll proceed, but let's report it
+      //TODO - this needs to be matured the error message must differentiate different scenarios
+      setFail("Record not found\nSignUp as student");
+    };
+      
+    
+  };
 
   return (
     <Container maxWidth="xs">
@@ -24,8 +60,15 @@ export const SignIn = () => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
+            id="role"
+            label="Role"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="entry_no"
+            label="Entry Number"
             autoFocus
           />
           <TextField
@@ -63,6 +106,7 @@ export const SignIn = () => {
             </Link>
           </Grid>
         </Grid>
+        {fail!=='' && <Alert severity="error">{fail}</Alert>}
       </Box>
     </Container>
   );
