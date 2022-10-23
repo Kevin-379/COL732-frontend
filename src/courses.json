@@ -1,0 +1,12 @@
+[
+    {
+        "code": "COL-732",
+        "name": "Cloud Computing",
+        "link": "/courses/col-732"
+    },
+    {
+        "code": "COL-807",
+        "name": "Special Topics in Machine learning",
+        "link": "/courses/col-807" 
+    }
+]

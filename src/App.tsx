@@ -1,5 +1,6 @@
 import { Box, CssBaseline, Switch, ThemeProvider } from "@mui/material";
 import { SignIn } from "./pages/SignIn";
+import { CoursePage } from "./pages/CoursePage";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { useState } from "react";
 import { lightTheme, darkTheme } from "./theme";
