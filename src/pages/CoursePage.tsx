@@ -1,15 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Grid, IconButton, Paper, Typography, Button, Box,
-     TextField, Table, TableContainer, TableHead, TableCell, TableBody, TableRow} from "@mui/material";
-import TaAssignmentBox from "../components/taAsBox";
-import axios from "axios";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Paper, Button,  Table, TableContainer, TableHead, TableCell, TableBody, TableRow} from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
-import { AssessmentTwoTone } from "@mui/icons-material";
-import { isFunctionDeclaration } from "typescript";
 
 type ast_entry = {
     asmt_id:string,
@@ -27,11 +19,7 @@ function CoursePage(){
     const role = location.state.role;
     const [ast_ids, setAst_ids] = useState<ast_entry[]>([]) ;
     const [loadAsmt, setLoadAsmt] = useState(false);
-    const [startTime, setStartTime] = useState(dayjs());
-    const [endTime, setEndTime] = useState(dayjs());
     const fetched = useRef(false);
-
-    
 
     useEffect(()=>{
         fetch('/getAllAss/'+course_id).then(
@@ -49,7 +37,6 @@ function CoursePage(){
                     fetched.current=true;
                 }
             }
-            
         )
         }
     ,[loadAsmt]);
