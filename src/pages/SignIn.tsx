@@ -37,7 +37,7 @@ export const SignIn = () => {
             if(role=== 'Admin'){
               navigate('/Admin');
             }else{
-                navigate('/Dash_board',{state:{entry_no:target.entry_no.value, role:role}})
+                navigate('/Dashboard',{state:{entry_no:target.entry_no.value, role:role}})
             }
           }else{
             setFail("Record not found");

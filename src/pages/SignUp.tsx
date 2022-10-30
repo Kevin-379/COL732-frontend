@@ -10,42 +10,61 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 //TODO - differentiate the error types and provide detailed alert
 
 export const SignUp = () => {
-    const [fail,setFail] = useState('');
-    const [success, setSuccess] = useState('');
-    const [role, setRole] = useState('Student');
+  const [fail, setFail] = useState('');
+  const [success, setSuccess] = useState('');
+  const [role, setRole] = useState('Student');
+  const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const target = e.target as typeof e.target & {
-        name: { value: string};
-        entry_no: { value: string };
-        password: { value: string };
-        password2: { value: string};
-      };
-      if(target.password.value === target.password2.value){
-        axios.post('/user/signup',{name:target.name.value, entry_no:target.entry_no.value, role: role,
-          password:target.password.value}).then(res =>{
-            console.log(res);
-            if(res.status === 201){
-              setFail('');
-              setSuccess('Sign up successful')
-            }else{
-              setFail('Sign up failed');
-              setSuccess('');
-            }
-          }).catch(err => {console.log(err);
-            setSuccess('');
-            setFail('Sign up failed');
-          });
-      }else{
-        setFail('Password mismatch retype password');
-        setSuccess('');
-      }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const target = e.target as typeof e.target & {
+      name: { value: string };
+      entry_no: { value: string };
+      password: { value: string };
+      password2: { value: string };
     };
+
+    if (target.name.value === "") {
+      setFail('Please enter name');
+      setSuccess('');
+      return;
+    }
+
+    if (target.entry_no.value === "") {
+      setFail('Please enter entry no.');
+      setSuccess('');
+      return;
+    }
+
+    if (target.password.value !== target.password2.value) {
+      setFail('Password mismatch retype password');
+      setSuccess('');
+      return;
+    }
+
+    axios.post('/user/signup', {
+      name: target.name.value, entry_no: target.entry_no.value, role: role,
+      password: target.password.value
+    }).then(res => {
+      console.log(res);
+      if (res.status === 201) {
+        setFail('');
+        setSuccess('Sign up successful')
+        navigate('/Dashboard', { state: { entry_no: target.entry_no.value, role: role } })
+      }
+      setFail('Sign up failed');
+      setSuccess('');
+    }).catch(err => {
+      console.log(err);
+      setSuccess('');
+      setFail('Sign up failed');
+    });
+  };
 
   return (
     <Container maxWidth="xs">
@@ -54,7 +73,7 @@ export const SignUp = () => {
           Sign Up
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate textAlign={"center"} >
-        <Select required fullWidth id="role" label='role' value={role} onChange={(e) => {setRole(e.target.value);}}>
+          <Select required fullWidth id="role" label='role' value={role} onChange={(e) => { setRole(e.target.value); }}>
             <MenuItem value="Student">Student</MenuItem>
             <MenuItem value="TA">TA</MenuItem>
           </Select>
@@ -105,8 +124,8 @@ export const SignUp = () => {
             </Link>
           </Grid>
         </Grid>
-        {fail!=='' && <Alert severity="error">{fail}</Alert>}
-        {success!=='' && <Alert severity="success">{success}</Alert>}
+        {fail !== '' && <Alert severity="error">{fail}</Alert>}
+        {success !== '' && <Alert severity="success">{success}</Alert>}
       </Box>
     </Container>
   );
