@@ -1,4 +1,3 @@
-import { SentimentSatisfiedAlt } from "@mui/icons-material";
 import {
   Alert,
   Box,

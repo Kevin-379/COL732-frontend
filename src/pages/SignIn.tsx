@@ -10,13 +10,11 @@ import {
   Typography,
   MenuItem,
   Select,
-  InputLabel,
   Alert
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-//TODO - make the role select instead of text
 
 export const SignIn = () => {
   const [role,setRole] = useState('Student');
@@ -30,7 +28,6 @@ export const SignIn = () => {
         role: {value: string};
         password: { value: string };
       };
-      //console.log(target.entry_no.value);
       axios.post('/user/login',{entry_no:target.entry_no.value, role: role,
         password:target.password.value}).then(res =>{
           if(res.status === 201){

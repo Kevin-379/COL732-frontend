@@ -1,24 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Typography, Paper, Grid, Box, Container, TextField, Button } from '@mui/material';
 import axios from 'axios';
-import CourseBox from '../components/courseBox';
+import CourseBox from '../components/CourseBox';
 import { useLocation } from "react-router-dom";
 
 type courseData = {
     course_id:string
 }
-//TODO - the addCourse must reflect the change at the button click
 function Dashboard(){
     let location = useLocation();
     const entry_no=location.state.entry_no;
     const role=location.state.role;
     const fetched = useRef(false);
-    //console.log(entry_no,role);
     const [course_ids, setCourses] = useState<string[]>([]) ;
     const [trigger, setTrigger] = useState(false);
-    //let course_ids: string[] =[];
-    //let course_boxes: React.ReactElement[] = [];//[<CourseBox entry_no={entry_no} role={role} course_id={'COL222'}/>];
-    //fetch the data from the backend
     useEffect(()=>{
         fetch('/getCourses/'+entry_no+'/'+role).then(
             response =>response.json()
