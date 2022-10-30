@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import { Paper, Button,  Table, TableContainer, TableHead, TableCell, TableBody, TableRow} from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
-type member = {
+type subs = {
     name:string,
     entry_no:string,
     role:string
@@ -12,7 +12,7 @@ type member = {
 
 function ManageAssignmentPage(){
     const [trigger, setTrigger] = useState(false);
-    const [mList, setMList] = useState<member[]>([]);
+    const [mList, setMList] = useState<subs[]>([]);
     const fetched = useRef(false);
     let location = useLocation();
     const token = window.sessionStorage.getItem('token')
