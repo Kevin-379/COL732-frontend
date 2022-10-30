@@ -1,4 +1,5 @@
 import {
+  AppBar,
   Box,
   CssBaseline,
   Divider,
@@ -6,6 +7,8 @@ import {
   List,
   ListItemButton,
   ListItemIcon,
+  MenuItem,
+  SwipeableDrawer,
   Switch,
   ThemeProvider,
   Toolbar,
@@ -32,7 +35,7 @@ function App() {
       <CssBaseline />
 
       <BrowserRouter>
-      <Drawer variant="permanent">
+      <AppBar position="static" >
         <Toolbar
           sx={{
             display: 'flex',
@@ -40,29 +43,22 @@ function App() {
             justifyContent: 'center',
           }}
         >
-          <Box textAlign={"center"} alignItems={"center"} display="flex" justifyContent={"center"} sx={{ mt: 2 }}>
+ {/* textAlign={"center"} alignItems={"center"} display="flex" justifyContent={"center"} sx={{ mt: 2 }} */}
+           <MenuItem>
             <LightMode fontSize={"small"} />
             <Switch onChange={(e) => setDarkMode(e.target.checked)}></Switch>
             <DarkMode fontSize={"small"} />
-          </Box>
-        </Toolbar>
-        <Divider />
-        <List component="nav">
-          <ListItemButton component={Link} to="/">
-            <ListItemIcon>
+          </MenuItem>
+          <MenuItem component={Link} to="/">
               <Login></Login>
               Sign in
-            </ListItemIcon>
-          </ListItemButton>
-          <Divider sx={{ my: 2 }} />
-          <ListItemButton component={Link} to="/signout">
-            <ListItemIcon>
+          </MenuItem>
+          <MenuItem component={Link} to="/signout">
               <Logout></Logout>
               Sign out
-            </ListItemIcon>
-          </ListItemButton>
-        </List>
-      </Drawer>
+          </MenuItem>
+        </Toolbar>
+      </AppBar>
 
         <Routes>
           <Route path='/' element={<SignIn />} />
