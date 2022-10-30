@@ -29,9 +29,9 @@ function ViewMembers(){
     const course_id = location.state.course_id;
     const entry_no=location.state.entry_no;
     const role=location.state.role;
-
+    const token = window.sessionStorage.getItem('token');
     useEffect(()=>{
-        fetch('/getAllMembers/'+course_id).then(
+        fetch('/getAllMembers/'+course_id,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
             response =>response.json()
         ).then(
             (val) => {
@@ -54,7 +54,7 @@ function ViewMembers(){
         const target = e.target as typeof e.target & {
             entry_no: {value:string};
         };
-        fetch('/setCourses/'+target.entry_no.value+'/Student/'+course_id)
+        fetch('/setCourses/'+target.entry_no.value+'/Student/'+course_id,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}})
         .then(res =>{
                 if(res.status===201){
                    //show successful message
@@ -71,7 +71,7 @@ function ViewMembers(){
         const target = e.target as typeof e.target & {
             entry_no: {value:string};
         };
-        fetch('/setCourses/'+target.entry_no.value+'/TA/'+course_id)
+        fetch('/setCourses/'+target.entry_no.value+'/TA/'+course_id,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}})
         .then(res =>{
                 if(res.status===201){
                    //show successful message
@@ -84,8 +84,8 @@ function ViewMembers(){
     }
 
     function remove(Role:string,entry:string){
-        fetch('/removeMember/'+entry+'/'+Role+'/'+course_id).then(
-            (res) => {console.log(res); setTrigger(!trigger); fetched.current=false;})
+        fetch('/removeMember/'+entry+'/'+Role+'/'+course_id,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}})
+        .then((res) => {console.log(res); setTrigger(!trigger); fetched.current=false;})
     }
     
     function renderMember(mem:member){

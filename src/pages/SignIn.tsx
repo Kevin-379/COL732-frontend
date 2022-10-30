@@ -20,6 +20,7 @@ export const SignIn = () => {
   const [role,setRole] = useState('Student');
   const [fail, setFail] = useState('');
   const navigate = useNavigate();
+  const [token, setToken] = useState('');
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try{
@@ -32,7 +33,7 @@ export const SignIn = () => {
         password:target.password.value}).then(res =>{
           if(res.status === 201){
             console.log("Login successful");
-            //switchTab
+            window.sessionStorage.setItem('token', 'HAHA');
             setFail('');
             if(role=== 'Admin'){
               navigate('/Admin');

@@ -6,9 +6,11 @@ type Props = {
     course_id:string
 }
 function CreateAssignment(props:Props){
-  const [role,setRole] = useState('Student');
   const [fail, setFail] = useState('');
-    let course_id = props.course_id;
+  const course_id = props.course_id;
+  const entry_no = window.sessionStorage.getItem('entry_no');
+  const role = window.sessionStorage.getItem('role');
+  const token = window.sessionStorage.getItem('token');
   const handleCreate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
@@ -18,7 +20,8 @@ function CreateAssignment(props:Props){
     pdf_link: {value: string};
     };
     axios.post('/createAss',{course_id:course_id, asmt_id: target.asmt_id.value,
-    start_time:target.start_time.value, end_time: target.end_time.value, pdf_link: target.pdf_link.value}
+    start_time:target.start_time.value, end_time: target.end_time.value, pdf_link: target.pdf_link.value},
+    {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
     ).then(res =>{console.log(res)})
   };
 

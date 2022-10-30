@@ -1,3 +1,4 @@
+import StudentAssignmentBox from "./stuAsBox";
 
 
 type Props = {
@@ -15,7 +16,9 @@ function VersionTree(props:Props){
     On click a node, Buttons with options will be popped
     */
    return (
-    <></>
+    <>
+        <StudentAssignmentBox course_id={props.course_id} entry_no={props.entry_no} ass_id={props.asmt_id}/>
+    </>
    );
 }
 export default VersionTree;

@@ -11,11 +11,12 @@ function Dashboard(){
     let location = useLocation();
     const entry_no=location.state.entry_no;
     const role=location.state.role;
+    const token = window.sessionStorage.getItem('token');
     const fetched = useRef(false);
     const [course_ids, setCourses] = useState<string[]>([]) ;
     const [trigger, setTrigger] = useState(false);
     useEffect(()=>{
-        fetch('/getCourses/'+entry_no+'/'+role).then(
+        fetch('/getCourses/'+entry_no+'/'+role, {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`} }).then(
             response =>response.json()
         ).then(
             (val) => {
@@ -35,12 +36,12 @@ function Dashboard(){
     ,[trigger])
     
     const handleAddCourse = (e: React.FormEvent<HTMLFormElement>) => {
+        console.log('add course triggered');
         e.preventDefault();
-        console.log('add course trigerred')
         const target = e.target as typeof e.target & {
             course_id: { value: string};
         };
-        fetch('/setCourses/'+entry_no+'/'+role+'/'+target.course_id.value)
+        fetch('/setCourses/'+entry_no+'/'+role+'/'+target.course_id.value, { headers: { token: `${token}`, entry_no: `${entry_no}`, role:`${role}` } })
         .then(res =>
             {
                 if(res.status===201){
