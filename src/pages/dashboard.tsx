@@ -8,7 +8,7 @@ type courseData = {
     course_id:string
 }
 //TODO - the addCourse must reflect the change at the button click
-function Dash_board(){
+function Dashboard(){
     let location = useLocation();
     const entry_no=location.state.entry_no;
     const role=location.state.role;
@@ -107,4 +107,4 @@ function Dash_board(){
 
 }
 
-export default Dash_board;
+export default Dashboard;
