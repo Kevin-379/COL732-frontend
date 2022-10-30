@@ -16,6 +16,7 @@ function CreateAsmt(){
     const course_id=location.state.course_id;
     const role = location.state.role;
     const created = useRef(false);
+    const token = window.sessionStorage.getItem('token');
     const [asmt_id, setAsmt_id] = useState('');
     const handleCreate = (e: React.FormEvent<HTMLFormElement>) => {//may take to another page where the template VM is set
         e.preventDefault();
@@ -25,6 +26,7 @@ function CreateAsmt(){
         };
         axios.post('/createAss',{course_id:course_id, asmt_id: target.asmt_id.value,
         start_time:startTime.unix(), end_time: endTime.unix(), pdf_link: target.pdf_link.value}
+        ,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
         ).then(res =>{console.log(res); setAsmt_id(target.asmt_id.value);})
         created.current = true;
       };

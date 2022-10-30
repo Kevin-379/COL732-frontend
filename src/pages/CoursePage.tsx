@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Paper, Button,  Table, TableContainer, TableHead, TableCell, TableBody, TableRow} from "@mui/material";
+import { Paper, Button,  Table, TableContainer, TableHead, TableCell, TableBody, TableRow, Typography} from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
 
 type ast_entry = {
@@ -17,12 +17,13 @@ function CoursePage(){
     const entry_no = location.state.entry_no;
     const course_id=location.state.course_id;
     const role = location.state.role;
+    const token = window.sessionStorage.getItem('token');
     const [ast_ids, setAst_ids] = useState<ast_entry[]>([]) ;
     const [loadAsmt, setLoadAsmt] = useState(false);
     const fetched = useRef(false);
 
     useEffect(()=>{
-        fetch('/getAllAss/'+course_id).then(
+        fetch('/getAllAss/'+course_id, {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
             response =>response.json()
         ).then(
             (val) => {
@@ -43,8 +44,10 @@ function CoursePage(){
 
     function redirect(ast:ast_entry ){
         let now = dayjs().unix();
-        if(ast.end_time>=now && now>=ast.start_time){
-            navigate('/AssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,ast_id:ast.asmt_id}});
+        if(role != 'Student'){
+            navigate('/ManageAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,ast_id:ast.asmt_id}});
+        }else{
+            navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,ast_id:ast.asmt_id}});
         }
     }
     function redirectCreateAsmt(){
@@ -70,6 +73,8 @@ function CoursePage(){
     
     return (
         <>
+            <Typography variant="h4" component="h1">Course {course_id}</Typography>
+            <br></br>
             <Button variant='contained' onClick={()=>{navigate('/viewMembers',
              {state:{entry_no:entry_no, role:role, course_id:course_id}})}}>
                 View Members

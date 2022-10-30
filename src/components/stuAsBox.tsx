@@ -13,16 +13,6 @@ function StudentAssignmentBox(props:Props){
     const [ip, setIP] = useState("0.0.0.0");
     const [err, setErr] = useState("");
     const [info, setInfo] = useState("");
-    useEffect(() => {
-        fetch('/members/'+props.entry_no+'/'+props.course_id+'/'+props.ass_id).then(
-            response =>response.json()
-        ).then(
-            val=>{
-            setVMID(val.VMID)
-            
-          }
-        )
-    },[]);//the list contains the vars that are triggers
     function resumeVM(){
         if(VMID === -1){
             setErr("No VM available for this assignment, Get a VM");
