@@ -7,7 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import axios from "axios";
 import TaAssignmentBox from "../components/taAsBox";
-
+import NavBar from "../components/NavBar";
 function CreateAsmt(){
     const [startTime, setStartTime] = useState(dayjs());
     const [endTime, setEndTime] = useState(dayjs());
@@ -33,6 +33,8 @@ function CreateAsmt(){
 
 
     return (
+        <>
+        <NavBar/>
         <Box>
         <Typography component="h3" variant="h5">
             Create assignment
@@ -61,7 +63,7 @@ function CreateAsmt(){
         </Box>
         {created.current && <TaAssignmentBox course_id={course_id} entry_no={entry_no} role={role} asmt_id={asmt_id}/>}
         </Box>
-        
+        </>
     );
 
 }

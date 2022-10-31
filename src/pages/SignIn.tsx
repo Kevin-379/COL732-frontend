@@ -26,14 +26,16 @@ export const SignIn = () => {
     try{
       const target = e.target as typeof e.target & {
         entry_no: { value: string };
-        role: {value: string};
         password: { value: string };
       };
       axios.post('/user/login',{entry_no:target.entry_no.value, role: role,
         password:target.password.value}).then(res =>{
           if(res.status === 201){
             console.log("Login successful");
-            window.sessionStorage.setItem('token', 'HAHA');
+            window.sessionStorage.setItem('token', res.data.token);
+            //console.log(res)
+            window.sessionStorage.setItem('entry_no', target.entry_no.value);
+            window.sessionStorage.setItem('role', role);
             setFail('');
             if(role=== 'Admin'){
               navigate('/Admin');

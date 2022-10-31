@@ -7,13 +7,16 @@ import {
     TableBody,
     TableCell,
     Grid,
+    Container,
     TextField,
     TableHead,
     TableRow,
+    Typography,
     TableContainer,
     Button,
     Paper
 } from '@mui/material'
+import NavBar from "../components/NavBar";
 
 type member = {
     name:string,
@@ -98,21 +101,28 @@ function ViewMembers(){
                 <TableCell align="center">{mem.entry_no}</TableCell>
                 <TableCell align="center">{mem.role}</TableCell>
                 {(role==='Instructor' && mem.role!=='Instructor') &&
-                <TableCell align="center"><Button onClick={()=>remove(mem.role,mem.entry_no)}>Remove member</Button></TableCell>}
+                <TableCell align="center">
+                    <Button variant="outlined" color="error" onClick={()=>remove(mem.role,mem.entry_no)}>
+                    Remove member
+                    </Button>
+                </TableCell>}
             </TableRow>
         );
     }
 
     return (
         <>
-        <TableContainer component={Paper}>
+        <NavBar/>
+        <Container>
+            <Typography variant='h3' sx={{my:2}}>{course_id}</Typography>
+        <TableContainer component={Paper} sx={{width: 700, my:3}}>
             <Table sx={{ width: 650 }} aria-label="simple table">
                 <TableHead>
                 <TableRow>
-                    <TableCell align="center">Name</TableCell>
-                    <TableCell align="center">Entry number</TableCell>
-                    <TableCell align="center">Role</TableCell>
-                    {role==='Instructor' && <TableCell align="center">Action</TableCell>}
+                    <TableCell align="center" sx={{fontWeight:'bold'}}>Name</TableCell>
+                    <TableCell align="center" sx={{fontWeight:'bold'}}>Entry number</TableCell>
+                    <TableCell align="center" sx={{fontWeight:'bold'}}>Role</TableCell>
+                    {role==='Instructor' && <TableCell align="center" sx={{fontWeight:'bold'}}>Action</TableCell>}
                 </TableRow>
                 </TableHead>
                 <TableBody>
@@ -122,30 +132,37 @@ function ViewMembers(){
                 </TableBody>
             </Table>
         </TableContainer>
-        { role!=='Student' &&
-            <Paper elevation={6} sx={{width:200, height:200, padding:1}}>
-            <Box component="form" onSubmit={addStudents} noValidate textAlign={"center"} >
-                <TextField margin="normal" required fullWidth
-                    id="entry_no" label="Entry No." autoFocus />
-                <br></br>
-                <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Add Student
-                </Button>
-            </Box>
-            </Paper>
-        }
-        {role ==='Instructor' &&
-            <Paper elevation={6} sx={{width:200, height:200, padding:1}}>
-            <Box component="form" onSubmit={addTA} noValidate textAlign={"center"} >
-                <TextField margin="normal" required fullWidth
-                    id="entry_no" label="Entry No." autoFocus />
-                <br></br>
-                <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Add TA
-                </Button>
-            </Box>
-            </Paper>
-        }
+        <Grid container spacing={1}>
+            <Grid item xs={3} sx={{m:3}}>
+            { role!=='Student' &&
+                <Paper elevation={6} sx={{width:200, height:200, padding:1}}>
+                <Box component="form" onSubmit={addStudents} noValidate textAlign={"center"} >
+                    <TextField margin="normal" required fullWidth
+                        id="entry_no" label="Entry No." autoFocus />
+                    <br></br>
+                    <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+                    Add Student
+                    </Button>
+                </Box>
+                </Paper>
+            }
+            </Grid>
+            <Grid item xs={3} sx={{m:3}}>
+            {role ==='Instructor' &&
+                <Paper elevation={6} sx={{width:200, height:200, padding:1}}>
+                <Box component="form" onSubmit={addTA} noValidate textAlign={"center"} >
+                    <TextField margin="normal" required fullWidth
+                        id="entry_no" label="Entry No." autoFocus />
+                    <br></br>
+                    <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+                    Add TA
+                    </Button>
+                </Box>
+                </Paper>
+            }
+            </Grid>
+        </Grid>
+        </Container>
         </>
     );
 }

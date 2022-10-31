@@ -3,14 +3,14 @@ import { Typography, Paper, Grid, Box, Container, TextField, Button } from '@mui
 import axios from 'axios';
 import CourseBox from '../components/CourseBox';
 import { useLocation } from "react-router-dom";
-
+import NavBar from '../components/NavBar';
 type courseData = {
   course_id: string
 }
 function Dashboard() {
   let location = useLocation();
-  const entry_no = location.state.entry_no;
-  const role = location.state.role;
+  const entry_no = String(window.sessionStorage.getItem('entry_no'))//location.state.entry_no;
+  const role = String(window.sessionStorage.getItem('role'))//location.state.role;
   const token = window.sessionStorage.getItem('token');
   const fetched = useRef(false);
   const [course_ids, setCourses] = useState<string[]>([]);
@@ -56,6 +56,7 @@ function Dashboard() {
   function addCourse() {
     if (role === 'Instructor') {
       return (
+        
         <Grid item xs={4}>
           <Paper elevation={6} sx={{ width: 200, height: 200, padding: 1 }}>
             <Box component="form" onSubmit={handleAddCourse} noValidate textAlign={"center"} >
@@ -85,6 +86,8 @@ function Dashboard() {
   }
 
   return (
+    <>
+      <NavBar/>
     <Container>
       <Typography variant="h4" component='h1' sx={{ my: 3 }}>Courses</Typography>
       <Grid container spacing={1}>
@@ -96,6 +99,7 @@ function Dashboard() {
         }
       </Grid>
     </Container>
+    </>
   )
 
 }

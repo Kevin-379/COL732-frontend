@@ -1,7 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Paper, Button,  Table, TableContainer, TableHead, TableCell, TableBody, TableRow, Typography} from "@mui/material";
+import { Paper, Button,  Table, TableContainer, TableHead,
+     TableCell, TableBody, TableRow, Typography, Container} from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
+import NavBar from "../components/NavBar";
 
 type ast_entry = {
     asmt_id:string,
@@ -45,7 +47,7 @@ function CoursePage(){
     function redirect(ast:ast_entry ){
         let now = dayjs().unix();
         if(role != 'Student'){
-            navigate('/ManageAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,ast_id:ast.asmt_id}});
+            navigate('/ManageAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
         }else{
             navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,ast_id:ast.asmt_id}});
         }
@@ -66,21 +68,23 @@ function CoursePage(){
                 <TableCell align="center"><a href={ast.pdf_link}>{ast.pdf_link}</a></TableCell>
                 <TableCell align="center">{dayjs.unix(ast.start_time).toISOString()}</TableCell>
                 <TableCell align="center">{dayjs.unix(ast.end_time).toISOString()}</TableCell>
-                {role!=='Student' && <TableCell align="center"><Button>"Edit assignment"</Button></TableCell>}
+                {role!=='Student' && <TableCell align="center"><Button>Edit assignment</Button></TableCell>}
             </TableRow>
         );
     }
     
     return (
         <>
-            <Typography variant="h4" component="h1">Course {course_id}</Typography>
+        <NavBar/>
+        <Container>
+            <Typography variant="h4" component="h1" sx={{my:2}}>Course {course_id}</Typography>
             <br></br>
             <Button variant='contained' onClick={()=>{navigate('/viewMembers',
              {state:{entry_no:entry_no, role:role, course_id:course_id}})}}>
                 View Members
             </Button>
             <TableContainer component={Paper}>
-            <Table sx={{ width: 650 }} aria-label="simple table">
+            <Table sx={{ width: "100%" }} aria-label="simple table">
                 <TableHead>
                 <TableRow>
                     <TableCell align="center">Assignment</TableCell>
@@ -98,6 +102,7 @@ function CoursePage(){
             </Table>
             </TableContainer>
             {role!=='Student' && <Button onClick={redirectCreateAsmt}>Create new assignment</Button>}
+        </Container>
         </>
 
     );

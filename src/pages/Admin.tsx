@@ -4,6 +4,7 @@
 import axios from 'axios';
 import {Container, Box, Typography, TextField, Button, Grid, Link, Alert} from '@mui/material';
 import { useState } from 'react';
+import NavBar from '../components/NavBar';
 
 function Admin(){
     const [fail,setFail] = useState('');
@@ -39,6 +40,8 @@ function Admin(){
     };
 
     return (
+      <>
+      <NavBar/>
         <Container maxWidth="xs">
       <Box alignItems={"center"} display={"flex"} flexDirection={"column"} sx={{ mt: 10 }}>
         <Typography component="h1" variant="h5">
@@ -97,6 +100,7 @@ function Admin(){
         {success!=='' && <Alert severity="success">{success}</Alert>}
       </Box>
     </Container>
+    </>
     );
 }
 

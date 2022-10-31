@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import { Paper, Button,  Table, TableContainer, TableHead, TableCell, TableBody, TableRow} from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
+import NavBar from "../components/NavBar";
 type subs = {
     name:string,
     entry_no:string,
@@ -19,13 +20,15 @@ function ManageAssignmentPage(){
     const entry_no = location.state.entry_no;
     const role = location.state.role;
     const course_id = location.state.course_id;
+    const asmt_id = location.state.asmt_id;
     const [selectedFile, setSelectedFile] = useState<File|null>(null);
     useEffect(()=>{
-        fetch('/getAllMembers/'+course_id, {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
+        fetch("/getAllSubmissions/"+course_id+'/'+asmt_id, {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
             response =>response.json()
         ).then(
             (val) => {
-                if(!fetched.current){
+                console.log(val);
+                /*if(!fetched.current){
                     let temp = []
                     for (let i = 0; i<val.members.length; i++) {
                         if(val.members[i].role=='Student'){
@@ -35,7 +38,7 @@ function ManageAssignmentPage(){
                     setMList(temp);
                     console.log('fetched mems',val,fetched.current);
                     fetched.current=true;
-                }
+                }*/
             }
         )
     },[trigger]);
@@ -108,6 +111,8 @@ function ManageAssignmentPage(){
 
     );
     */
-   return (<></>);
+   return (<>
+   <NavBar/>
+   </>);
 }
 export default ManageAssignmentPage;
