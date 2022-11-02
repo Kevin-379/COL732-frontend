@@ -19,7 +19,7 @@ function CreateAssignment(props:Props){
     end_time: {value:number};
     pdf_link: {value: string};
     };
-    axios.post('/createAss',{course_id:course_id, asmt_id: target.asmt_id.value,
+    axios.post('http://127.0.0.1:5000/createAss',{course_id:course_id, asmt_id: target.asmt_id.value,
     start_time:target.start_time.value, end_time: target.end_time.value, pdf_link: target.pdf_link.value},
     {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
     ).then(res =>{console.log(res)})

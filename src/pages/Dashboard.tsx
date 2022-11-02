@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Typography, Paper, Grid, Box, Container, TextField, Button } from '@mui/material';
-import axios from 'axios';
 import CourseBox from '../components/CourseBox';
 import { useLocation } from "react-router-dom";
 import NavBar from '../components/NavBar';
-type courseData = {
-  course_id: string
-}
+
+
 function Dashboard() {
   let location = useLocation();
   const entry_no = String(window.sessionStorage.getItem('entry_no'))//location.state.entry_no;

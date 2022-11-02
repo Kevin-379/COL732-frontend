@@ -1,7 +1,4 @@
 import React from "react";
-import axios from "axios";
-import StudentAssignmentBox from "../components/stuAsBox";
-import TaAssignmentBox from "../components/taAsBox";
 import {Container,Grid} from '@mui/material/';
 import { useLocation } from "react-router-dom";
 import VersionTree from "../components/VersionTree";

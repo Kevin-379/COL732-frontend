@@ -20,7 +20,6 @@ export const SignIn = () => {
   const [role,setRole] = useState('Student');
   const [fail, setFail] = useState('');
   const navigate = useNavigate();
-  const [token, setToken] = useState('');
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try{
@@ -104,11 +103,6 @@ export const SignIn = () => {
           </Button>
         </Box>
         <Grid container>
-          <Grid item xs>
-            <Link href="#" variant="body2">
-              Forgot password?
-            </Link>
-          </Grid>
           <Grid item>
             <Link href="/SignUp" variant="body2">
               {"Don't have an account? Sign Up"}

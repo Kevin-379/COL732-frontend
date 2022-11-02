@@ -17,7 +17,7 @@ function VersionTree(props:Props){
     */
    return (
     <>
-        <StudentAssignmentBox course_id={props.course_id} entry_no={props.entry_no} ass_id={props.asmt_id}/>
+        <StudentAssignmentBox course_id={props.course_id} entry_no={props.entry_no} asmt_id={props.asmt_id}/>
     </>
    );
 }

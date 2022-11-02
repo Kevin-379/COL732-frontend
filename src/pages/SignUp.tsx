@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 //TODO - differentiate the error types and provide detailed alert
 
@@ -56,9 +56,10 @@ export const SignUp = () => {
         setFail('');
         setSuccess('Sign up successful')
         navigate('/Dashboard', { state: { entry_no: target.entry_no.value, role: role } })
+      }else{
+        setFail('Sign up failed');
+        setSuccess('');
       }
-      setFail('Sign up failed');
-      setSuccess('');
     }).catch(err => {
       console.log(err);
       setSuccess('');

@@ -14,6 +14,7 @@ import CoursePage from "./pages/CoursePage";
 import CreateAsmt from "./pages/CreateAsmt";
 import ViewMembers from "./pages/ViewMembers";
 import ManageAssignmentPage from "./pages/ManageAssignmentPage";
+import ChangePassword from "./pages/ChangePassword";
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const theme = (darkMode ? darkTheme : lightTheme);
@@ -34,6 +35,7 @@ function App() {
           <Route path='/CoursePage' element={<CoursePage />} />
           <Route path='/CreateAsmt' element={<CreateAsmt />} />
           <Route path='/viewMembers' element={<ViewMembers />} />
+          <Route path='/ChangePassword' element={<ChangePassword/>}/>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

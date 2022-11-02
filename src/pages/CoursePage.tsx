@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Paper, Button,  Table, TableContainer, TableHead,
      TableCell, TableBody, TableRow, Typography, Container} from "@mui/material";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import NavBar from "../components/NavBar";
 
 type ast_entry = {
@@ -25,7 +25,8 @@ function CoursePage(){
     const fetched = useRef(false);
 
     useEffect(()=>{
-        fetch('/getAllAss/'+course_id, {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
+        fetch('/getAllAss/'+course_id,
+         {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
             response =>response.json()
         ).then(
             (val) => {
@@ -49,7 +50,7 @@ function CoursePage(){
         if(role != 'Student'){
             navigate('/ManageAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
         }else{
-            navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,ast_id:ast.asmt_id}});
+            navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
         }
     }
     function redirectCreateAsmt(){

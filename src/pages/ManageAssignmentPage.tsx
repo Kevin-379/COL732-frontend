@@ -3,17 +3,21 @@ import { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import { Paper, Button,  Table, TableContainer, TableHead, TableCell, TableBody, TableRow} from "@mui/material";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import NavBar from "../components/NavBar";
-type subs = {
-    name:string,
-    entry_no:string,
-    role:string
+type sub = {
+    course_id: string,
+    assignment_id: string,
+    entry_no: string,
+    submission_time:number,
+    marks:number,
+    asmt_path:string,
+    plag_path:string
 }
 
 function ManageAssignmentPage(){
     const [trigger, setTrigger] = useState(false);
-    const [mList, setMList] = useState<subs[]>([]);
+    const [subList, setSubList] = useState<sub[]>([]);
     const fetched = useRef(false);
     let location = useLocation();
     const token = window.sessionStorage.getItem('token')
@@ -22,28 +26,30 @@ function ManageAssignmentPage(){
     const course_id = location.state.course_id;
     const asmt_id = location.state.asmt_id;
     const [selectedFile, setSelectedFile] = useState<File|null>(null);
+    
+    //get the submission details of the student
     useEffect(()=>{
-        fetch("/getAllSubmissions/"+course_id+'/'+asmt_id, {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
+        fetch("/getAllSubmissions/"+course_id+'/'+asmt_id, 
+        {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
             response =>response.json()
         ).then(
             (val) => {
                 console.log(val);
-                /*if(!fetched.current){
+                if(!fetched.current){
                     let temp = []
-                    for (let i = 0; i<val.members.length; i++) {
-                        if(val.members[i].role=='Student'){
-                            temp.push(val.members[i]);
-                        }
+                    for (let i = 0; i<val.submissions.length; i++) {
+                        temp.push(val.submissions[i]);
                     }
-                    setMList(temp);
-                    console.log('fetched mems',val,fetched.current);
+                    setSubList(temp);
+                    console.log('fetched submissions',val,fetched.current);
                     fetched.current=true;
-                }*/
+                }
             }
         )
     },[trigger]);
     //get submissions for all the students 
 
+    //trying to upload the checker file
     const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         if(selectedFile!=null){
@@ -67,42 +73,48 @@ function ManageAssignmentPage(){
             console.log(e.target.files[0]);
         }
     }
-    /*
-    function submissionBox(){
+
+
+    
+    function submissionBox(ast: sub){
         return (
             <TableRow
-              key={ast.asmt_id}
+              key={ast.entry_no}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-                <TableCell align="center"><Button onClick={()=>redirect(ast)}>{ast.asmt_id}</Button></TableCell>
-                <TableCell align="center"><a href={ast.pdf_link}>{ast.pdf_link}</a></TableCell>
-                <TableCell align="center">{dayjs.unix(ast.start_time).toISOString()}</TableCell>
-                <TableCell align="center">{dayjs.unix(ast.end_time).toISOString()}</TableCell>
-                {role!=='Student' && <TableCell align="center"><Button>"Edit assignment"</Button></TableCell>}
+                <TableCell align="center">{ast.entry_no}</TableCell>
+                <TableCell align="center">{dayjs.unix(ast.submission_time).toISOString()}</TableCell>
+                <TableCell align="center"><Button>Get report</Button></TableCell>
+                <TableCell align="center"><Button>Download</Button></TableCell>
+                <TableCell align="center"><Button>Set marks</Button></TableCell>
             </TableRow>
         );
     }
     
     return (
         <>
+        <NavBar/>
+            {/*
             <form onSubmit={handleSubmit}>
               <input type="file" onChange={handleFileSelect}/>
               <input type="submit" value="Upload checker script"/>
             </form>
+            */}
+            <Button>Run auto grader for all</Button>
             <TableContainer component={Paper}>
             <Table sx={{ width: 650 }} aria-label="simple table">
                 <TableHead>
                 <TableRow>
                     <TableCell align="center">Student entry num</TableCell>
                     <TableCell align="center">Submission time</TableCell>
-                    <TableCell align="center">Run autograder</TableCell>
-                    <TableCell align="center">Get plag button</TableCell>
+                    <TableCell align="center">Get report button</TableCell>
                     <TableCell align="center">Download submission files</TableCell>
+                    <TableCell align="center">Set marks</TableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
             {
-                ast_ids.map((ast) =>(astBox(ast)))
+                subList.map((ast) =>(submissionBox(ast)))
             }
                 </TableBody>
             </Table>
@@ -110,9 +122,6 @@ function ManageAssignmentPage(){
         </>
 
     );
-    */
-   return (<>
-   <NavBar/>
-   </>);
+
 }
 export default ManageAssignmentPage;
