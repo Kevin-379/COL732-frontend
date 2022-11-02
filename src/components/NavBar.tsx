@@ -21,17 +21,17 @@ function NavBar(){
         >
             { window.location.pathname !=='/Admin' &&
           <MenuItem component={Link} to="/Dashboard">
-            <Button variant="outlined" color="inherit">
+            <Button variant="outlined" color="inherit" style={{textTransform: 'none'}}>
               <Home></Home>
-              Home
+              <Typography margin={0.5}> Home </Typography>
             </Button>
           </MenuItem>
             }
           <MenuItem component={Link} to="/">
-            <Button variant="outlined" color="inherit" onClick={()=>{window.sessionStorage.setItem('token','')}}>
+            <Button variant="outlined" color="inherit" style={{textTransform: 'none'}} onClick={()=>{window.sessionStorage.setItem('token','')}}>
               <Logout></Logout>
-              <Typography> Sign Out </Typography>
-              </Button>
+              <Typography  margin={0.5}> Sign Out </Typography>
+            </Button>
           </MenuItem>
         </Toolbar>
       </AppBar>
