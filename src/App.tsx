@@ -15,6 +15,7 @@ import CreateAsmt from "./pages/CreateAsmt";
 import ViewMembers from "./pages/ViewMembers";
 import ManageAssignmentPage from "./pages/ManageAssignmentPage";
 function App() {
+  // currently the theme is not changing
   const [darkMode, setDarkMode] = useState(false);
   const theme = (darkMode ? darkTheme : lightTheme);
   
