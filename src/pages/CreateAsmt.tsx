@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useState, useRef } from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, TextField, Button, Container } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,9 +22,10 @@ function CreateAsmt(){
         e.preventDefault();
         const target = e.target as typeof e.target & {
         asmt_id: {value: string};
+        asmt_name: {value: string};
         pdf_link: {value: string};
         };
-        axios.post('/createAss',{course_id:course_id, asmt_id: target.asmt_id.value,
+        axios.post('/createAss',{course_id:course_id, asmt_id: target.asmt_id.value, asmt_name: target.asmt_name.value,
         start_time:startTime.unix(), end_time: endTime.unix(), pdf_link: target.pdf_link.value}
         ,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
         ).then(res =>{console.log(res); setAsmt_id(target.asmt_id.value);})
@@ -35,12 +36,14 @@ function CreateAsmt(){
     return (
         <>
         <NavBar/>
+        <Container>
         <Box>
-        <Typography component="h3" variant="h5">
-            Create assignment
+        <Typography component="h3" variant="h4" sx={{my:1}}>
+            <b>Create assignment</b>
         </Typography>
-        <Box component="form" onSubmit={handleCreate} noValidate textAlign={"center"} >
+        <Box component="form" onSubmit={handleCreate} noValidate textAlign={"left"} >
             <TextField margin="normal" required fullWidth id="asmt_id" label="Assignment id"/>
+            <TextField margin="normal" required fullWidth id="asmt_name" label="Assignment name"/>
             <TextField margin="normal" required fullWidth id="pdf_link" label="pdf_link"/>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
@@ -58,11 +61,12 @@ function CreateAsmt(){
             </LocalizationProvider>
             <br></br>
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} >
-            Create Assignment
+            Create Entry
             </Button>
         </Box>
         {created.current && <TaAssignmentBox course_id={course_id} entry_no={entry_no} role={role} asmt_id={asmt_id}/>}
         </Box>
+        </Container>
         </>
     );
 

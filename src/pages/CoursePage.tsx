@@ -7,6 +7,7 @@ import NavBar from "../components/NavBar";
 
 type ast_entry = {
     asmt_id:string,
+    asmt_name: string,
     start_time: number,
     end_time: number,
     vmid:number,
@@ -50,11 +51,25 @@ function CoursePage(){
         if(role != 'Student'){
             navigate('/ManageAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
         }else{
-            navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
+            let now = dayjs().unix()
+            if(ast.start_time <= now && now<=ast.end_time){
+                navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
+            }else{
+                if(ast.start_time>now){
+                    window.alert('Assignment not yet started')
+                }else{
+                    window.alert('Assignment ended!')
+                }
+               
+            }
         }
     }
     function redirectCreateAsmt(){
         navigate('/CreateAsmt', {state:{entry_no:entry_no, course_id:course_id, role:role}})
+    }
+
+    function editAsmt(asmt_id:string){
+        navigate('/EditAsmt', {state:{course_id:course_id, asmt_id:asmt_id}})
     }
 
     function astBox(ast:ast_entry){
@@ -65,11 +80,18 @@ function CoursePage(){
               key={ast.asmt_id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-                <TableCell align="center"><Button onClick={()=>redirect(ast)}>{ast.asmt_id}</Button></TableCell>
+                <TableCell align="center">{ast.asmt_id}</TableCell>
+                <TableCell align="center"><Button onClick={()=>redirect(ast)}>{ast.asmt_name}</Button></TableCell>
                 <TableCell align="center"><a href={ast.pdf_link}>{ast.pdf_link}</a></TableCell>
                 <TableCell align="center">{dayjs.unix(ast.start_time).toISOString()}</TableCell>
                 <TableCell align="center">{dayjs.unix(ast.end_time).toISOString()}</TableCell>
-                {role!=='Student' && <TableCell align="center"><Button>Edit assignment</Button></TableCell>}
+                {role!=='Student' && 
+                    <TableCell align="center">
+                        <Button onClick={() =>editAsmt(ast.asmt_id)}>
+                            Edit assignment
+                        </Button>
+                    </TableCell>
+                }
             </TableRow>
         );
     }
@@ -88,7 +110,8 @@ function CoursePage(){
             <Table sx={{ width: "100%" }} aria-label="simple table">
                 <TableHead>
                 <TableRow>
-                    <TableCell align="center">Assignment</TableCell>
+                    <TableCell align="center">ID</TableCell>
+                    <TableCell align="center">Assignment name</TableCell>
                     <TableCell align="center">PDF Link</TableCell>
                     <TableCell align="center">Start time</TableCell>
                     <TableCell align="center">End time</TableCell>

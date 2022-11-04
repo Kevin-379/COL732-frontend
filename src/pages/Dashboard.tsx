@@ -96,6 +96,8 @@ function Dashboard() {
           ))
         }
       </Grid>
+      <br></br>
+      <a href="/downloadCheck">Download</a>
     </Container>
     </>
   )

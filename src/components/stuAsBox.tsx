@@ -9,9 +9,9 @@ type Props = {
 }
 
 function StudentAssignmentBox(props:Props){
-    const [VMID, setVMID] = useState(-1);
+    const [VMID, setVMID] = useState(0);
     const [vm_state, setVm_state] = useState("UNKNOWN");
-    const [ip, setIP] = useState("0.0.0.0");
+    ///const [ip, setIP] = useState("0.0.0.0");
     const [err, setErr] = useState("");
     const [info, setInfo] = useState("");
     const [password, setPassword] = useState("");
@@ -53,6 +53,21 @@ function StudentAssignmentBox(props:Props){
             );
         }
     }
+    function startFresh(){
+        fetch('/startFresh/'+entry_no+'/'+props.course_id+'/'+props.asmt_id,
+            {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+            ).then(
+                response => response.json()
+            ).then(
+                (val) => {
+                    if(val.message==='started'){
+                        setPassword(val.password);
+                        setVm_state("RUNNING");
+                        setVMID(val.vmid);
+                    }
+                }
+            );        
+    }
     function getVM(){
         if(vm_state==="RUNNING"){
             setInfo("vm is running");
@@ -86,20 +101,21 @@ function StudentAssignmentBox(props:Props){
 
     
     return (
-        <Grid item xs={6}>
-        <Paper elevation={3}>
+        <Grid item xs={12}>
+        <Paper elevation={3} sx={{m:1}}>
             <Box padding={1}>
-        <Typography variant='h5' component='h2'><b>Assignment details</b></Typography>
+        <Typography variant='h5' component='h2'><b>VM manager</b></Typography>
         <Box padding={1}>
         <Typography variant='h6' component='h3'>VM status: {vm_state}</Typography>
-        <Button disabled={vm_state==="RUNNING"} onClick={getVM} variant='contained' color='primary' sx={{m:1}} size="small">Get VM</Button>
+        <Button disabled={vm_state==="RUNNING"} onClick={startFresh} variant='contained' color='primary' sx={{m:1}} size="small">Start ISO</Button>
+        <Button disabled={vm_state==="RUNNING"} onClick={getVM} variant='contained' color='primary' sx={{m:1}} size="small">Start template VM</Button>
         <Button disabled={vm_state==="PAUSED"} onClick={pauseVM} variant='contained' color='primary' sx={{m:1}} size="small">Pause VM</Button>
         <Button disabled={vm_state==="RUNNING"} onClick={resumeVM} variant='contained' color='primary' sx={{m:1}} size="small">Resume VM</Button>
         <Button onClick={submit} variant='contained' color='primary' sx={{m:1}} size="small">Submit</Button>
         {vm_state==="RUNNING" && 
         <div>
-            <Typography variant='body1'><b>Use command on the terminal :</b> ssh aqweqeqwqw</Typography>
-            <Typography variant='body1'><b>IP address :</b> {ip}</Typography>
+            <Typography variant='body1'><b>Use command on dkstra :</b> ssh {entry_no}@192.168.{200+VMID}.2</Typography>
+            {/*<Typography variant='body1'><b>IP address :</b> {ip}</Typography>*/}
             <Typography variant='body1'><b>Password :</b> {password}</Typography>
         </div>
         }
