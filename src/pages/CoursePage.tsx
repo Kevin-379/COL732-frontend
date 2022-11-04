@@ -10,7 +10,7 @@ type ast_entry = {
     asmt_name: string,
     start_time: number,
     end_time: number,
-    vmid:number,
+    iso:string,
     pdf_link: string
 }
 
@@ -53,7 +53,7 @@ function CoursePage(){
         }else{
             let now = dayjs().unix()
             if(ast.start_time <= now && now<=ast.end_time){
-                navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
+                navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id, iso:ast.iso}});
             }else{
                 if(ast.start_time>now){
                     window.alert('Assignment not yet started')
@@ -81,13 +81,13 @@ function CoursePage(){
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
                 <TableCell align="center">{ast.asmt_id}</TableCell>
-                <TableCell align="center"><Button onClick={()=>redirect(ast)}>{ast.asmt_name}</Button></TableCell>
+                <TableCell align="center"><Button onClick={()=>redirect(ast)} style={{textTransform: 'none'}}>{ast.asmt_name}</Button></TableCell>
                 <TableCell align="center"><a href={ast.pdf_link}>{ast.pdf_link}</a></TableCell>
                 <TableCell align="center">{dayjs.unix(ast.start_time).toISOString()}</TableCell>
                 <TableCell align="center">{dayjs.unix(ast.end_time).toISOString()}</TableCell>
                 {role!=='Student' && 
                     <TableCell align="center">
-                        <Button onClick={() =>editAsmt(ast.asmt_id)}>
+                        <Button onClick={() =>editAsmt(ast.asmt_id)} style={{textTransform: 'none'}}>
                             Edit assignment
                         </Button>
                     </TableCell>

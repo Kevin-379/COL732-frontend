@@ -11,12 +11,13 @@ function StudentAssignmentPage(){
     const role=location.state.role;
     const course_id = location.state.course_id;
     const asmt_id = location.state.asmt_id;
+    const iso = location.state.iso;
     return (
     <>
     <NavBar/>
       <Container>
         <Grid container spacing={1}>
-          <VersionTree entry_no={entry_no} role={role} course_id={course_id} asmt_id={asmt_id}/>
+          <VersionTree entry_no={entry_no} role={role} course_id={course_id} asmt_id={asmt_id} iso={iso}/>
           <MessageBox entry_no={entry_no} role={role} course_id={course_id} asmt_id={asmt_id}/>
         </Grid>
       </Container>

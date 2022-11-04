@@ -40,7 +40,7 @@ function NavBar(){
           </MenuItem>
             }
           <MenuItem component={Link} to="/">
-            <Button variant="outlined" color="inherit" onClick={clearSession}>
+            <Button variant="outlined" style={{textTransform: 'none'}} color="inherit" onClick={clearSession}>
             <Logout></Logout>
             <Typography  margin={0.5}> Sign Out </Typography>
             </Button>

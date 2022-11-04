@@ -5,7 +5,8 @@ type Props = {
     entry_no:string,
     role:string,
     course_id:string,
-    asmt_id:string
+    asmt_id:string,
+    iso:string
 }
 function VersionTree(props:Props){
     /*
@@ -17,7 +18,7 @@ function VersionTree(props:Props){
     */
    return (
     <>
-        <StudentAssignmentBox course_id={props.course_id} entry_no={props.entry_no} asmt_id={props.asmt_id}/>
+        <StudentAssignmentBox course_id={props.course_id} entry_no={props.entry_no} asmt_id={props.asmt_id} iso={props.iso}/>
     </>
    );
 }

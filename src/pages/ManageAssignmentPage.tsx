@@ -84,9 +84,9 @@ function ManageAssignmentPage(){
             >
                 <TableCell align="center">{ast.entry_no}</TableCell>
                 <TableCell align="center">{dayjs.unix(ast.submission_time).toISOString()}</TableCell>
-                <TableCell align="center"><Button>Get report</Button></TableCell>
-                <TableCell align="center"><Button>Download</Button></TableCell>
-                <TableCell align="center"><Button>Set marks</Button></TableCell>
+                <TableCell align="center"><Button style={{textTransform: 'none'}}>Get report</Button></TableCell>
+                <TableCell align="center"><Button style={{textTransform: 'none'}}>Download</Button></TableCell>
+                <TableCell align="center"><Button style={{textTransform: 'none'}}>Set marks</Button></TableCell>
             </TableRow>
         );
     }

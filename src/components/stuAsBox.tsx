@@ -5,12 +5,13 @@ import dayjs from 'dayjs';
 type Props = {
     entry_no: string,
     course_id: string,
-    asmt_id: string
+    asmt_id: string,
+    iso:string
 }
 
 function StudentAssignmentBox(props:Props){
     const [VMID, setVMID] = useState(0);
-    const [vm_state, setVm_state] = useState("UNKNOWN");
+    const [vm_state, setVm_state] = useState("PAUSED");
     ///const [ip, setIP] = useState("0.0.0.0");
     const [err, setErr] = useState("");
     const [info, setInfo] = useState("");
@@ -18,8 +19,21 @@ function StudentAssignmentBox(props:Props){
     const entry_no = String(window.sessionStorage.getItem('entry_no'));
     const token=window.sessionStorage.getItem('token');
     const role = window.sessionStorage.getItem('role');
+    useEffect(()=>{
+        fetch('/getPrevVM/'+props.course_id+'/'+props.asmt_id+'/'+entry_no, 
+        {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}})
+        .then(res=>res.json())
+        .then((val) => {
+            if(val.message==='running'){
+                setVMID(val.vmid);
+                setPassword(val.password);
+                setVm_state('RUNNING');
+            }
+        })
+    },[])
+
     function resumeVM(){
-        fetch('/resumeVM/'+entry_no+'/'+props.course_id+'/'+props.asmt_id,
+        fetch('/resumeVM/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
         {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
         ).then(
             response =>response.json()
@@ -54,7 +68,7 @@ function StudentAssignmentBox(props:Props){
         }
     }
     function startFresh(){
-        fetch('/startFresh/'+entry_no+'/'+props.course_id+'/'+props.asmt_id,
+        fetch('/startFresh/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
             {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
             ).then(
                 response => response.json()
@@ -73,7 +87,7 @@ function StudentAssignmentBox(props:Props){
             setInfo("vm is running");
         }else{
             //call backend to fork and return the ip
-            fetch('/startTemplate/'+entry_no+'/'+props.course_id+'/'+props.asmt_id,
+            fetch('/startTemplate/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
             {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
             ).then(
                 response => response.json()

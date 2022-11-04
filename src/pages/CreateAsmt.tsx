@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
-import { useState, useRef } from "react";
-import { Box, Typography, TextField, Button, Container } from "@mui/material";
+import { useState, useRef, useEffect } from "react";
+import { Box, Typography, TextField, Button, Container
+,FormControl, InputLabel, FormHelperText, MenuItem, Select } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,6 +19,39 @@ function CreateAsmt(){
     const created = useRef(false);
     const token = window.sessionStorage.getItem('token');
     const [asmt_id, setAsmt_id] = useState('');
+    const [ISO, setISO] = useState('');
+    const [ISOs, setISOs] = useState<string[]>([]);
+    const fetched = useRef(false);
+
+    useEffect(() => {
+        fetch('/getISOs', { headers: { token: `${token}`, entry_no: `${entry_no}`, role: `${role}` } }).then(
+          response => response.json()
+        ).then(
+          (val) => {
+            if (!fetched.current) {
+              let temp = []
+              for (let i = 0; i < val.length; i++) {
+                temp.push(val[i].ISO);
+              }
+              setISOs(temp);
+              fetched.current = true;
+            }
+          }
+    
+        )
+      },[])
+
+
+    function selectISO(name: string){
+        setISO(name);
+        //also send it to the backend
+    }
+    const ISOnames = ISOs;
+    const ISOvals = []
+    for (let i = 0; i < ISOnames.length; i++) {
+        ISOvals.push(<MenuItem key={ISOnames[i]} value={ISOnames[i]}>{ISOnames[i]}</MenuItem>);
+    }
+
     const handleCreate = (e: React.FormEvent<HTMLFormElement>) => {//may take to another page where the template VM is set
         e.preventDefault();
         const target = e.target as typeof e.target & {
@@ -26,7 +60,7 @@ function CreateAsmt(){
         pdf_link: {value: string};
         };
         axios.post('/createAss',{course_id:course_id, asmt_id: target.asmt_id.value, asmt_name: target.asmt_name.value,
-        start_time:startTime.unix(), end_time: endTime.unix(), pdf_link: target.pdf_link.value}
+        start_time:startTime.unix(), end_time: endTime.unix(),iso:ISO, pdf_link: target.pdf_link.value}
         ,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
         ).then(res =>{console.log(res); setAsmt_id(target.asmt_id.value);})
         created.current = true;
@@ -60,11 +94,27 @@ function CreateAsmt(){
                 />
             </LocalizationProvider>
             <br></br>
+
+            <Typography variant='body1'>Select ISO image</Typography>
+
+                <FormControl required sx={{ m: 1, hieght:10,minWidth: 100 }} size="small">
+                    <InputLabel id="ISO">ISO</InputLabel>
+                    <Select labelId="ISO" id="ISO"
+                    value={ISO} label="ISO"
+                    onChange={(e) => {selectISO(e.target.value)}}>
+
+                    {ISOvals}
+                    
+                    </Select>
+                    <FormHelperText>Required</FormHelperText>
+                </FormControl>
+            <br></br>
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} >
             Create Entry
             </Button>
         </Box>
-        {created.current && <TaAssignmentBox course_id={course_id} entry_no={entry_no} role={role} asmt_id={asmt_id}/>}
+        {created.current && 
+        <TaAssignmentBox course_id={course_id} entry_no={entry_no} role={role} asmt_id={asmt_id} iso={ISO}/>}
         </Box>
         </Container>
         </>

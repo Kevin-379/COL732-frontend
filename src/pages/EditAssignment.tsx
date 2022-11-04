@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Box, Typography, TextField, Button, Container } from "@mui/material";
+import { Box, Typography, TextField, Button, Container,
+MenuItem, FormControl, InputLabel, Select, FormHelperText} from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,7 +23,10 @@ function EditAsmt(){
     const entry_no = String(window.sessionStorage.getItem('entry_no'));
     const fetched = useRef(false);
     const token = window.sessionStorage.getItem('token');
-
+    const [ISO, setISO] = useState('');
+    const [ISOs, setISOs] = useState<string[]>([]);
+    const fetchediso = useRef(false);
+    const [selected, setSelected] = useState(false);
     //fetch the assignment details we wont allow the changing of assignment id
 
     useEffect(()=>{
@@ -38,13 +42,38 @@ function EditAsmt(){
                     setPdf(val.pdf_link);
                     setAsmtName(val.asmt_name);
                     console.log('asmt_name', val.asmt_name);
-                    console.log('fetched asmt',val,fetched.current);
                     fetched.current=true;
                 }
             }
         )
-        }
-    ,[]);
+        fetch('/getISOs', { headers: { token: `${token}`, entry_no: `${entry_no}`, role: `${role}` } }).then(
+            response => response.json()
+          ).then(
+            (val) => {
+              if (!fetchediso.current) {
+                let temp = []
+                for (let i = 0; i < val.length; i++) {
+                  temp.push(val[i].ISO);
+                }
+                setISOs(temp);
+                console.log(temp);
+                fetchediso.current = true;
+              }
+            }
+      
+          )
+    },[]);
+
+    function selectISO(name: string){
+        setISO(name);
+        setSelected(true);
+        //also send it to the backend
+    }
+    const ISOnames = ISOs;
+    const ISOvals = []
+    for (let i = 0; i < ISOnames.length; i++) {
+        ISOvals.push(<MenuItem key={ISOnames[i]} value={ISOnames[i]}>{ISOnames[i]}</MenuItem>);
+    }
 
     const handleEdit = (e: React.FormEvent<HTMLFormElement>) => {//may take to another page where the template VM is set
         e.preventDefault();
@@ -53,7 +82,7 @@ function EditAsmt(){
             pdf_link: {value: string};
         };
         axios.post('/updateAss',{course_id:course_id, asmt_id: asmt_id,asmt_name:target.asmt_name.value,
-        start_time:startTime.unix(), end_time: endTime.unix(), pdf_link: target.pdf_link.value}
+        start_time:startTime.unix(), end_time: endTime.unix(),iso:ISO, pdf_link: target.pdf_link.value}
         ,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
         ).then(res =>{console.log(res);})
       };
@@ -87,11 +116,27 @@ function EditAsmt(){
                 />
             </LocalizationProvider>
             <br></br>
+
+            <Typography variant='body1'>Select ISO image</Typography>
+
+                <FormControl required sx={{ m: 1, hieght:10,minWidth: 100 }} size="small">
+                    <InputLabel id="ISO">ISO</InputLabel>
+                    <Select labelId="ISO" id="ISO"
+                    value={ISO} label="ISO"
+                    onChange={(e) => {selectISO(e.target.value)}}>
+
+                    {ISOvals}
+                    
+                    </Select>
+                    <FormHelperText>Required</FormHelperText>
+                </FormControl>
+            <br></br>
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} >
             Edit Entry
             </Button>
         </Box>
-        {<TaAssignmentBox course_id={course_id} entry_no={entry_no} role={role} asmt_id={asmt_id}/>}
+        {selected &&
+        <TaAssignmentBox course_id={course_id} entry_no={entry_no} role={role} asmt_id={asmt_id} iso={ISO}/>}
         </Box>
         </Container>
         </>
