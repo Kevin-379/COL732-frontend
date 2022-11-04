@@ -17,6 +17,7 @@ import ManageAssignmentPage from "./pages/ManageAssignmentPage";
 import ChangePassword from "./pages/ChangePassword";
 import EditAsmt from "./pages/EditAssignment";
 function App() {
+  // currently the theme is not changing
   const [darkMode, setDarkMode] = useState(false);
   const theme = (darkMode ? darkTheme : lightTheme);
   

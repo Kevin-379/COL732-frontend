@@ -3,6 +3,7 @@ import {
     MenuItem,
     Button,
     Toolbar,
+    Typography,
   } from "@mui/material";
   import { Logout, Home } from "@mui/icons-material";
 
@@ -32,14 +33,16 @@ function NavBar(){
         >
             { window.location.pathname !=='/Admin' &&
           <MenuItem component={Link} to="/Dashboard">
+            <Button variant="outlined" color="inherit" style={{textTransform: 'none'}}>
               <Home></Home>
-              Home
+              <Typography margin={0.5}> Home </Typography>
+            </Button>
           </MenuItem>
             }
           <MenuItem component={Link} to="/">
-            <Button variant="outlined" color="info" onClick={clearSession}>
+            <Button variant="outlined" color="inherit" onClick={clearSession}>
             <Logout></Logout>
-            Sign out
+            <Typography  margin={0.5}> Sign Out </Typography>
             </Button>
           </MenuItem>
           <MenuItem component={Link} to="/ChangePassword">
