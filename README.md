@@ -1,14 +1,14 @@
 # COL732 Frontend
 
 ## TODO
-- [ ] Navbar
-- [ ] Dashboard
-- [ ] Course page
+- [x] Navbar
+- [x] Dashboard
+- [x] Course page
 - [ ] Student assignment page
   - [ ] Version tree
-  - [ ] Options to operate the version - Resume, Pause, Fork, Submit
+  - [x] Options to operate the version - Resume, Pause, Fork, Submit
 - [ ] Assignment management page
-  - [ ] Assignment update box - options to change deadline, change the template VM
+  - [x] Assignment update box - options to change deadline, change the template VM
   - [ ] Submissions list
 - [ ] Message box
 - [ ] Leader board
