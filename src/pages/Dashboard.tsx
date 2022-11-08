@@ -3,6 +3,7 @@ import { Typography, Paper, Grid, Box, Container, TextField, Button } from '@mui
 import CourseBox from '../components/CourseBox';
 import { useLocation } from "react-router-dom";
 import NavBar from '../components/NavBar';
+import { base_url } from "../components/config";
 
 
 function Dashboard() {
@@ -14,7 +15,7 @@ function Dashboard() {
   const [course_ids, setCourses] = useState<string[]>([]);
   const [trigger, setTrigger] = useState(false);
   useEffect(() => {
-    fetch('/getCourses/' + entry_no + '/' + role, { headers: { token: `${token}`, entry_no: `${entry_no}`, role: `${role}` } }).then(
+    fetch(base_url+'/getCourses/' + entry_no + '/' + role, { headers: { token: `${token}`, entry: `${entry_no}`, role: `${role}` } }).then(
       response => response.json()
     ).then(
       (val) => {
@@ -30,6 +31,10 @@ function Dashboard() {
       }
 
     )
+    /*fetch(base_url+'/getName/'+entry_no, 
+    { headers: { token: `${token}`, entry: `${entry_no}`, role: `${role}` } })
+    .then(res => res.json())
+    .then((val) => {window.sessionStorage.setItem('name', val.name)})*/
   }
     , [trigger])
 
@@ -39,7 +44,7 @@ function Dashboard() {
     const target = e.target as typeof e.target & {
       course_id: { value: string };
     };
-    fetch('/setCourses/' + entry_no + '/' + role + '/' + target.course_id.value, { headers: { token: `${token}`, entry_no: `${entry_no}`, role: `${role}` } })
+    fetch(base_url+'/setCourses/' + entry_no + '/' + role + '/' + target.course_id.value, { headers: { token: `${token}`, entry: `${entry_no}`, role: `${role}` } })
       .then(res => {
         if (res.status === 201) {
           //course_boxes.push(<CourseBox entry_no={entry_no} role={role} course_id={target.course_id.value}/>)
@@ -55,7 +60,7 @@ function Dashboard() {
     if (role === 'Instructor') {
       return (
         
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Paper elevation={6} sx={{ width: 200, height: 200, padding: 1 }}>
             <Box component="form" onSubmit={handleAddCourse} noValidate textAlign={"center"} >
               <TextField
@@ -96,9 +101,8 @@ function Dashboard() {
           ))
         }
       </Grid>
-      <br></br>
-      <a href="/downloadCheck">Download</a>
     </Container>
+    <a href={base_url+'/downloadCheck'}>Download</a>
     </>
   )
 

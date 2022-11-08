@@ -4,6 +4,7 @@ import { Paper, Button,  Table, TableContainer, TableHead,
      TableCell, TableBody, TableRow, Typography, Container} from "@mui/material";
 import dayjs from 'dayjs';
 import NavBar from "../components/NavBar";
+import { base_url } from "../components/config";
 
 type ast_entry = {
     asmt_id:string,
@@ -26,16 +27,16 @@ function CoursePage(){
     const fetched = useRef(false);
 
     useEffect(()=>{
-        fetch('/getAllAss/'+course_id,
-         {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
+        fetch(base_url+'/getAllAss/'+course_id,
+         {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}).then(
             response =>response.json()
         ).then(
             (val) => {
                 if(!fetched.current){
                     //course_boxes=[];
                     let temp = []
-                    for (let i = 0; i<val.length; i++) {
-                        temp.push(val[i]);
+                    for (let i = 0; i<val.asmts.length; i++) {
+                        temp.push(val.asmts[i]);
                     }
                     setAst_ids(temp);
                     console.log('fetched asses',val,fetched.current);
@@ -47,13 +48,14 @@ function CoursePage(){
     ,[loadAsmt]);
 
     function redirect(ast:ast_entry ){
-        let now = dayjs().unix();
-        if(role != 'Student'){
+        //let now = dayjs().unix();
+        if(role !== 'Student'){
             navigate('/ManageAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
         }else{
             let now = dayjs().unix()
             if(ast.start_time <= now && now<=ast.end_time){
-                navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id, iso:ast.iso}});
+                navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role,
+                     course_id:course_id,asmt_id:ast.asmt_id, iso:ast.iso, pdf_link:ast.pdf_link}});
             }else{
                 if(ast.start_time>now){
                     window.alert('Assignment not yet started')
@@ -74,17 +76,17 @@ function CoursePage(){
 
     function astBox(ast:ast_entry){
         //TODO - this must appear horizontal
-        let yo = dayjs.unix(ast.start_time);//way to convert time since epoch to dayjs
+        //let yo = dayjs.unix(ast.start_time);//way to convert time since epoch to dayjs
         return (
             <TableRow
               key={ast.asmt_id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
                 <TableCell align="center">{ast.asmt_id}</TableCell>
-                <TableCell align="center"><Button onClick={()=>redirect(ast)} style={{textTransform: 'none'}}>{ast.asmt_name}</Button></TableCell>
-                <TableCell align="center"><a href={ast.pdf_link}>{ast.pdf_link}</a></TableCell>
-                <TableCell align="center">{dayjs.unix(ast.start_time).toISOString()}</TableCell>
-                <TableCell align="center">{dayjs.unix(ast.end_time).toISOString()}</TableCell>
+                <TableCell align="center"><Button onClick={()=>redirect(ast)} style={{textTransform: 'none'}} variant='outlined'>{ast.asmt_name}</Button></TableCell>
+                <TableCell align="center"><a target="_blank" href={ast.pdf_link}>link to the description</a></TableCell>
+                <TableCell align="center">{dayjs.unix(ast.start_time).format('LT')}<br></br>{dayjs.unix(ast.start_time).format('ll')}</TableCell>
+                <TableCell align="center">{dayjs.unix(ast.end_time).format('LT')}<br></br>{dayjs.unix(ast.end_time).format('ll')}</TableCell>
                 {role!=='Student' && 
                     <TableCell align="center">
                         <Button onClick={() =>editAsmt(ast.asmt_id)} style={{textTransform: 'none'}}>
@@ -104,7 +106,7 @@ function CoursePage(){
             <br></br>
             <Button variant='contained' onClick={()=>{navigate('/viewMembers',
              {state:{entry_no:entry_no, role:role, course_id:course_id}})}}>
-                View Members
+                Members
             </Button>
             <TableContainer component={Paper}>
             <Table sx={{ width: "100%" }} aria-label="simple table">

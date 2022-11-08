@@ -17,6 +17,7 @@ import {
     Paper
 } from '@mui/material'
 import NavBar from "../components/NavBar";
+import { base_url } from "../components/config";
 
 type member = {
     name:string,
@@ -34,8 +35,8 @@ function ViewMembers(){
     const role=location.state.role;
     const token = window.sessionStorage.getItem('token');
     useEffect(()=>{
-        fetch('/getAllMembers/'+course_id,
-        {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
+        fetch(base_url+'/getAllMembers/'+course_id,
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}).then(
             response =>response.json()
         ).then(
             (val) => {
@@ -58,8 +59,8 @@ function ViewMembers(){
         const target = e.target as typeof e.target & {
             entry_no: {value:string};
         };
-        fetch('/setCourses/'+target.entry_no.value+'/Student/'+course_id,
-        {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}})
+        fetch(base_url+'/setCourses/'+target.entry_no.value+'/Student/'+course_id,
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}})
         .then(res =>{
                 if(res.status===201){
                    //show successful message
@@ -76,8 +77,8 @@ function ViewMembers(){
         const target = e.target as typeof e.target & {
             entry_no: {value:string};
         };
-        fetch('/setCourses/'+target.entry_no.value+'/TA/'+course_id,
-        {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}})
+        fetch(base_url+'/setCourses/'+target.entry_no.value+'/TA/'+course_id,
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}})
         .then(res =>{
                 if(res.status===201){
                    //show successful message
@@ -90,7 +91,7 @@ function ViewMembers(){
     }
 
     function remove(Role:string,entry:string){
-        fetch('http://127.0.0.1:5000/removeMember/'+entry+'/'+Role+'/'+course_id,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}})
+        fetch(base_url+'/removeMember/'+entry+'/'+Role+'/'+course_id,{headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}})
         .then((res) => {console.log(res); setTrigger(!trigger); fetched.current=false;})
     }
     
@@ -105,7 +106,7 @@ function ViewMembers(){
                 <TableCell align="center">{mem.role}</TableCell>
                 {(role==='Instructor' && mem.role!=='Instructor') &&
                 <TableCell align="center">
-                    <Button variant="outlined" color="error" onClick={()=>remove(mem.role,mem.entry_no)}>
+                    <Button variant="outlined" size="small" color="error" onClick={()=>remove(mem.role,mem.entry_no)}>
                     Remove member
                     </Button>
                 </TableCell>}
@@ -118,8 +119,8 @@ function ViewMembers(){
         <NavBar/>
         <Container>
             <Typography variant='h3' sx={{my:2}}>{course_id}</Typography>
-        <TableContainer component={Paper} sx={{width: 700, my:3}}>
-            <Table sx={{ width: 650 }} aria-label="simple table">
+        <TableContainer component={Paper} sx={{width: 800, my:3}}>
+            <Table sx={{ width: '95%' }} aria-label="simple table">
                 <TableHead>
                 <TableRow>
                     <TableCell align="center" sx={{fontWeight:'bold'}}>Name</TableCell>

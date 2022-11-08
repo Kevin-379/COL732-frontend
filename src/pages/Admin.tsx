@@ -5,11 +5,13 @@ import axios from 'axios';
 import {Container, Box, Typography, TextField, Button, Grid, Link, Alert} from '@mui/material';
 import { useState } from 'react';
 import NavBar from '../components/NavBar';
+import { base_url } from '../components/config';
+import { useNavigate } from 'react-router-dom';
 
 function Admin(){
     const [fail,setFail] = useState('');
     const [success, setSuccess] = useState('');
-
+    const navigate = useNavigate();
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
       const target = e.target as typeof e.target & {
@@ -19,7 +21,7 @@ function Admin(){
         password2: { value: string};
       };
       if(target.password.value === target.password2.value){
-        axios.post('/user/signup',{name:target.name.value, entry_no:target.entry_no.value, role: 'Instructor',
+        axios.post(base_url+'/user/signup',{name:target.name.value, entry_no:target.entry_no.value, role: 'Instructor',
           password:target.password.value}).then(res =>{
             console.log(res);
             if(res.status === 201){
@@ -90,9 +92,9 @@ function Admin(){
         </Box>
         <Grid container>
           <Grid item>
-            <Link href="/" variant="body2">
+            <Button onClick={()=>{navigate('/')}}>
               {"Go to sign in page"}
-            </Link>
+            </Button>
           </Grid>
         </Grid>
 

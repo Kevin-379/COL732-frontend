@@ -1,13 +1,15 @@
 import {
   CssBaseline,
   ThemeProvider,
+  Switch, Box
 } from "@mui/material";
+import { DarkMode, LightMode } from "@mui/icons-material";
 import { useState } from "react";
 import { lightTheme, darkTheme } from "./theme";
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import  Admin from './pages/Admin';
-import {BrowserRouter, Link, Route, Routes} from 'react-router-dom'
+import {HashRouter, Route, Routes} from 'react-router-dom'
 import Dashboard from './pages/Dashboard';
 import StudentAssignmentPage from "./pages/StudentAssignmentPage";
 import CoursePage from "./pages/CoursePage";
@@ -26,7 +28,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path='/' element={<SignIn />} />
           <Route path='/SignUp' element={<SignUp />} />
@@ -40,7 +42,12 @@ function App() {
           <Route path='/ChangePassword' element={<ChangePassword/>}/>
           <Route path='/EditAsmt' element={<EditAsmt/>}/>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
+      <Box sx={{position: 'fixed', bottom:'5px', left:'10px' , height:'50px', width:'150px'}}>
+      <LightMode fontSize={"small"} />
+          <Switch onChange={(e) => setDarkMode(e.target.checked)}></Switch>
+      <DarkMode fontSize={"small"} />
+      </Box>
     </ThemeProvider>
   );
 }

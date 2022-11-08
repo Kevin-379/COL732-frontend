@@ -14,7 +14,7 @@ function CourseBox(props: Props){
         navigate('/CoursePage',{state:{entry_no:props.entry_no, role:props.role, course_id:props.course_id}})
     }
     return (
-        <Grid item xs={4} key={props.course_id}> 
+        <Grid item xs={3} key={props.course_id}> 
             <IconButton onClick={redirect}>
             <Paper elevation={6} sx={{width:200, height:200, padding:1}}>
                 <Typography variant="h3" sx={{height:100}}>{props.course_id}</Typography>

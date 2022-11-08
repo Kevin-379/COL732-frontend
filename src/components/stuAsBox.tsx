@@ -1,7 +1,8 @@
 import React,{ useState, useEffect} from 'react';
-import axios from "axios";
+//import axios from "axios";
 import { Button, Typography, Paper, Grid, Box } from '@mui/material';
-import dayjs from 'dayjs';
+//import dayjs from 'dayjs';
+import { base_url } from './config';
 type Props = {
     entry_no: string,
     course_id: string,
@@ -20,8 +21,8 @@ function StudentAssignmentBox(props:Props){
     const token=window.sessionStorage.getItem('token');
     const role = window.sessionStorage.getItem('role');
     useEffect(()=>{
-        fetch('/getPrevVM/'+props.course_id+'/'+props.asmt_id+'/'+entry_no, 
-        {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}})
+        fetch(base_url+'/getPrevVM/'+props.course_id+'/'+props.asmt_id+'/'+entry_no, 
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}})
         .then(res=>res.json())
         .then((val) => {
             if(val.message==='running'){
@@ -33,8 +34,8 @@ function StudentAssignmentBox(props:Props){
     },[])
 
     function resumeVM(){
-        fetch('/resumeVM/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
-        {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+        fetch(base_url+'/resumeVM/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
         ).then(
             response =>response.json()
         ).then(
@@ -45,6 +46,8 @@ function StudentAssignmentBox(props:Props){
                 }
             }
         );
+        fetch(base_url+'/recordActivities/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+'resume',
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}});
     }
     
     function pauseVM(){
@@ -52,8 +55,8 @@ function StudentAssignmentBox(props:Props){
             setInfo("VM is not running");
         }else{
             //call the backend to pause the VM and snapshot
-            fetch('/pauseVM/'+entry_no+'/'+props.course_id+'/'+props.asmt_id,
-            {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+            fetch(base_url+'/pauseVM/'+entry_no+'/'+props.course_id+'/'+props.asmt_id,
+            {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
             ).then(
                 response =>response.json()
             ).then(
@@ -65,11 +68,13 @@ function StudentAssignmentBox(props:Props){
                     }
                 }
             );
+            fetch(base_url+'/recordActivities/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+'pause',
+            {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}});
         }
     }
     function startFresh(){
-        fetch('/startFresh/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
-            {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+        fetch(base_url+'/startFresh/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
+            {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
             ).then(
                 response => response.json()
             ).then(
@@ -81,14 +86,16 @@ function StudentAssignmentBox(props:Props){
                     }
                 }
             );        
+        fetch(base_url+'/recordActivities/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+'start_iso',
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}});
     }
     function getVM(){
         if(vm_state==="RUNNING"){
             setInfo("vm is running");
         }else{
             //call backend to fork and return the ip
-            fetch('/startTemplate/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
-            {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+            fetch(base_url+'/startTemplate/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
+            {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
             ).then(
                 response => response.json()
             ).then(
@@ -99,18 +106,24 @@ function StudentAssignmentBox(props:Props){
                     }
                 }
             );
+            fetch(base_url+'/recordActivities/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+'start_template',
+            {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}});
         }
     }
     function submit(){
         console.log("On student submit ",props.asmt_id);
-        axios.post('/studentSubmit',
+        /*axios.post(base_url+'/studentSubmit',
         {entry_no:entry_no,course_id:props.course_id, asmt_id:props.asmt_id, time:dayjs().unix()},
-        {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
         ).then((res) => {
             if(res.status!==201){
                 console.log(res);
             }
         })
+        fetch(base_url+'/recordActivities/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+'submit',
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}});*/
+        fetch(base_url+'/submitAsmt/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+VMID,
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}});
     }
 
     
@@ -122,12 +135,14 @@ function StudentAssignmentBox(props:Props){
         <Box padding={1}>
         <Typography variant='h6' component='h3'>VM status: {vm_state}</Typography>
         <Button disabled={vm_state==="RUNNING"} onClick={startFresh} variant='contained' color='primary' sx={{m:1}} size="small">Start ISO</Button>
-        <Button disabled={vm_state==="RUNNING"} onClick={getVM} variant='contained' color='primary' sx={{m:1}} size="small">Start template VM</Button>
-        <Button disabled={vm_state==="PAUSED"} onClick={pauseVM} variant='contained' color='primary' sx={{m:1}} size="small">Pause VM</Button>
-        <Button disabled={vm_state==="RUNNING"} onClick={resumeVM} variant='contained' color='primary' sx={{m:1}} size="small">Resume VM</Button>
-        <Button onClick={submit} variant='contained' color='primary' sx={{m:1}} size="small">Submit</Button>
+        <Button disabled={true || vm_state==="RUNNING"} onClick={getVM} variant='contained' color='primary' sx={{m:1}} size="small">Start template VM</Button>
+        <Button disabled={vm_state==="PAUSED"} onClick={pauseVM} variant='contained' color='primary' sx={{m:1}} size="small">Stop VM</Button>
+        <Button disabled={true || vm_state==="RUNNING"} onClick={resumeVM} variant='contained' color='primary' sx={{m:1}} size="small">Resume VM</Button>
+        <Button disabled={true} onClick={submit} variant='contained' color='primary' sx={{m:1}} size="small">Submit</Button>
         {vm_state==="RUNNING" && 
         <div>
+            <Typography variant='body1'>ssh into the dkstra using col732_all@dkstra.cse.iitd.ac.in, password: col732_all</Typography>
+            <br></br>
             <Typography variant='body1'><b>Use command on dkstra :</b> ssh {entry_no}@192.168.{200+VMID}.2</Typography>
             {/*<Typography variant='body1'><b>IP address :</b> {ip}</Typography>*/}
             <Typography variant='body1'><b>Password :</b> {password}</Typography>

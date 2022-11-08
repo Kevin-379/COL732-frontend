@@ -12,6 +12,7 @@ import {
   import axios from "axios";
   import { useState } from "react";
   import { useNavigate } from "react-router-dom";
+import { base_url } from "../components/config";
 import NavBar from "../components/NavBar";
   
 
@@ -37,10 +38,10 @@ function ChangePassword(){
         return;
       }
       
-      axios.post('/user/changePassword', {
+      axios.post(base_url+'/user/changePassword', {
         entry_no: entry_no, role: role,
         prev_password: target.prev_password.value, new_password: target.password.value
-      },{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+      },{headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
       ).then(res => {
         console.log(res);
         if (res.status === 201) {

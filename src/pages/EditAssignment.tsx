@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import axios from "axios";
 import TaAssignmentBox from "../components/taAsBox";
 import NavBar from "../components/NavBar";
+import { base_url } from "../components/config";
 
 
 function EditAsmt(){
@@ -30,8 +31,8 @@ function EditAsmt(){
     //fetch the assignment details we wont allow the changing of assignment id
 
     useEffect(()=>{
-        fetch('/getAss/'+course_id+'/'+asmt_id,
-         {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}).then(
+        fetch(base_url+'/getAss/'+course_id+'/'+asmt_id,
+         {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}).then(
             response =>response.json()
         ).then(
             (val) => {
@@ -41,22 +42,23 @@ function EditAsmt(){
                     setEndTime(dayjs.unix(val.end_time));
                     setPdf(val.pdf_link);
                     setAsmtName(val.asmt_name);
+                    setISO(val.iso);
                     console.log('asmt_name', val.asmt_name);
                     fetched.current=true;
                 }
             }
         )
-        fetch('/getISOs', { headers: { token: `${token}`, entry_no: `${entry_no}`, role: `${role}` } }).then(
+        fetch(base_url+'/getISOs', { headers: { token: `${token}`, entry: `${entry_no}`, role: `${role}` } }).then(
             response => response.json()
           ).then(
             (val) => {
               if (!fetchediso.current) {
                 let temp = []
-                for (let i = 0; i < val.length; i++) {
-                  temp.push(val[i].ISO);
+                for (let i = 0; i < val.isos.length; i++) {
+                  temp.push(val.isos[i]);
                 }
                 setISOs(temp);
-                console.log(temp);
+                console.log(val.isos);
                 fetchediso.current = true;
               }
             }
@@ -81,9 +83,9 @@ function EditAsmt(){
             asmt_name: {value: string};
             pdf_link: {value: string};
         };
-        axios.post('/updateAss',{course_id:course_id, asmt_id: asmt_id,asmt_name:target.asmt_name.value,
+        axios.post(base_url+'/updateAss',{course_id:course_id, asmt_id: asmt_id,asmt_name:target.asmt_name.value,
         start_time:startTime.unix(), end_time: endTime.unix(),iso:ISO, pdf_link: target.pdf_link.value}
-        ,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+        ,{headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
         ).then(res =>{console.log(res);})
       };
 
@@ -135,7 +137,7 @@ function EditAsmt(){
             Edit Entry
             </Button>
         </Box>
-        {selected &&
+        {
         <TaAssignmentBox course_id={course_id} entry_no={entry_no} role={role} asmt_id={asmt_id} iso={ISO}/>}
         </Box>
         </Container>

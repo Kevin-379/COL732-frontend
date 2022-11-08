@@ -4,6 +4,7 @@ import {
     Button,
     Toolbar,
     Typography,
+    Box
   } from "@mui/material";
   import { Logout, Home } from "@mui/icons-material";
 
@@ -17,22 +18,30 @@ function NavBar(){
       navigate('/')
     }
   })
+
+  const entry_no = window.sessionStorage.getItem('entry_no');
+  const role = window.sessionStorage.getItem('role');
+  const name = window.sessionStorage.getItem('name');
   function clearSession(){
     window.sessionStorage.setItem('token','');
     window.sessionStorage.setItem('entry_no','');
     window.sessionStorage.setItem('role','');
+    window.sessionStorage.setItem('name','')
   }
     return (
       <AppBar position="static" >
+        
         <Toolbar
           sx={{
-            display: 'flex',
-            alignItems: 'right',
-            justifyContent: 'right',
+            display: 'flex'
           }}
         >
+          <Box display='flex' flexGrow={1}>
+          <Typography sx={{alignItems:'left'}}><b>Name : {name} &nbsp; &nbsp; Entry No : {entry_no}</b></Typography>
+          </Box>
+          
             { window.location.pathname !=='/Admin' &&
-          <MenuItem component={Link} to="/Dashboard">
+          <MenuItem component={Link} sx={{alignItems:'right'}} to="/Dashboard">
             <Button variant="outlined" color="inherit" style={{textTransform: 'none'}}>
               <Home></Home>
               <Typography margin={0.5}> Home </Typography>

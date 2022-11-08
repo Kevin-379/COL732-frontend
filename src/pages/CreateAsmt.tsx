@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Box, Typography, TextField, Button, Container
-,FormControl, InputLabel, FormHelperText, MenuItem, Select } from "@mui/material";
+,FormControl, InputLabel, FormHelperText, MenuItem, Select, Alert } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import axios from "axios";
 import TaAssignmentBox from "../components/taAsBox";
 import NavBar from "../components/NavBar";
+import { base_url } from "../components/config";
 function CreateAsmt(){
     const [startTime, setStartTime] = useState(dayjs());
     const [endTime, setEndTime] = useState(dayjs());
@@ -20,21 +21,23 @@ function CreateAsmt(){
     const token = window.sessionStorage.getItem('token');
     const [asmt_id, setAsmt_id] = useState('');
     const [ISO, setISO] = useState('');
+    const [fail, setFail] = useState('');
     const [ISOs, setISOs] = useState<string[]>([]);
     const fetched = useRef(false);
 
     useEffect(() => {
-        fetch('/getISOs', { headers: { token: `${token}`, entry_no: `${entry_no}`, role: `${role}` } }).then(
+        fetch(base_url+'/getISOs', { headers: { token: `${token}`, entry: `${entry_no}`, role: `${role}` } }).then(
           response => response.json()
         ).then(
           (val) => {
             if (!fetched.current) {
               let temp = []
-              for (let i = 0; i < val.length; i++) {
-                temp.push(val[i].ISO);
+              for (let i = 0; i < val.isos.length; i++) {
+                temp.push(val.isos[i]);
               }
               setISOs(temp);
               fetched.current = true;
+              console.log(ISOs);
             }
           }
     
@@ -59,10 +62,23 @@ function CreateAsmt(){
         asmt_name: {value: string};
         pdf_link: {value: string};
         };
-        axios.post('/createAss',{course_id:course_id, asmt_id: target.asmt_id.value, asmt_name: target.asmt_name.value,
+        if(target.asmt_id.value === ''){
+          setFail('Fill the assgnment id');
+          return;
+        }else if(target.asmt_name.value === ''){
+          setFail('Fill the assignment name');
+          return;
+        }else if(target.pdf_link.value === ''){
+          setFail('Fill the pdf_link');
+          return;
+        }else if(ISO===''){
+          setFail('Pick an ISO');
+          return;
+        }
+        axios.post(base_url+'/createAss',{course_id:course_id, asmt_id: target.asmt_id.value, asmt_name: target.asmt_name.value,
         start_time:startTime.unix(), end_time: endTime.unix(),iso:ISO, pdf_link: target.pdf_link.value}
-        ,{headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
-        ).then(res =>{console.log(res); setAsmt_id(target.asmt_id.value);})
+        ,{headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
+        ).then(res =>{console.log(res); setAsmt_id(target.asmt_id.value); setFail('')})
         created.current = true;
       };
 
@@ -112,8 +128,9 @@ function CreateAsmt(){
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} >
             Create Entry
             </Button>
+            {fail!=='' && <Alert severity="error">{fail}</Alert>}
         </Box>
-        {created.current && 
+        {created.current && ISO!=='' &&
         <TaAssignmentBox course_id={course_id} entry_no={entry_no} role={role} asmt_id={asmt_id} iso={ISO}/>}
         </Box>
         </Container>

@@ -15,6 +15,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { base_url } from "../components/config";
 
 export const SignIn = () => {
   const [role,setRole] = useState('Student');
@@ -22,16 +23,19 @@ export const SignIn = () => {
   const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('login clicked');
     try{
       const target = e.target as typeof e.target & {
         entry_no: { value: string };
         password: { value: string };
       };
-      axios.post('/user/login',{entry_no:target.entry_no.value, role: role,
+      axios.post(base_url+'/user/login',{entry_no:target.entry_no.value, role: role,
         password:target.password.value}).then(res =>{
+          console.log(res)
           if(res.status === 201){
             console.log("Login successful");
             window.sessionStorage.setItem('token', res.data.token);
+            window.sessionStorage.setItem('name', res.data.name);
             //console.log(res)
             window.sessionStorage.setItem('entry_no', target.entry_no.value);
             window.sessionStorage.setItem('role', role);
@@ -59,8 +63,8 @@ export const SignIn = () => {
 
   return (
     <Container maxWidth="xs">
-      <Box alignItems={"center"} display={"flex"} flexDirection={"column"} sx={{ mt: 10 }}>
-        <Typography component="h1" variant="h5">
+      <Box alignItems={"center"} display={"flex"} flexDirection={"column"} sx={{ mt: 10, boxShadow:2, padding: 3 }}>
+        <Typography component="h1" variant="h5" sx={{my:2}}>
           Sign in
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate textAlign={"center"} >
@@ -87,12 +91,7 @@ export const SignIn = () => {
             label="Password"
             type="password"
           />
-          <small>
-            <FormControlLabel
-              control={<Checkbox value="remember" />}
-              label="Remember me"
-            />
-          </small>
+          
           <br></br>
           <Button
             type="submit"
@@ -104,9 +103,9 @@ export const SignIn = () => {
         </Box>
         <Grid container>
           <Grid item>
-            <Link href="/SignUp" variant="body2">
+            <Button onClick={()=>{navigate('/SignUp')}} style={{textTransform: 'none'}}>
               {"Don't have an account? Sign Up"}
-            </Link>
+            </Button>
           </Grid>
         </Grid>
         {fail!=='' && <Alert severity="error">{fail}</Alert>}

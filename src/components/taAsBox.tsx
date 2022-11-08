@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { Typography, Box, Button, Select, FormControl, FormHelperText, InputLabel, MenuItem} from '@mui/material';
 import {PlayArrow, FileUpload, Stop, Save, RestartAlt} from '@mui/icons-material';
+import { base_url } from './config';
 
 type Props = {
     course_id:string,
@@ -25,7 +26,7 @@ function TaAssignmentBox(props:Props){
    const [password, setPassword] = useState("");
 
 //    useEffect(() => {
-//     fetch('/getISOs', { headers: { token: `${token}`, entry_no: `${entry_no}`, role: `${role}` } }).then(
+//     fetch('/getISOs', { headers: { token: `${token}`, entry: `${entry_no}`, role: `${role}` } }).then(
 //       response => response.json()
 //     ).then(
 //       (val) => {
@@ -41,10 +42,22 @@ function TaAssignmentBox(props:Props){
 
 //     )
 //   },[])
+    useEffect(()=>{
+        fetch(base_url+'/getPrevVM/'+props.course_id+'/'+props.asmt_id+'/'+entry_no, 
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}})
+        .then(res=>res.json())
+        .then((val) => {
+            if(val.message==='running'){
+                setVMID(val.vmid);
+                setPassword(val.password);
+                setVMstate('RUNNING');
+            }
+        })
+    },[])
 
     function resumeTemplate(){
-        fetch('/startTemplate/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
-            {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+        fetch(base_url+'/startTemplate/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
+            {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
             ).then(
                 response => response.json()
             ).then(
@@ -55,10 +68,12 @@ function TaAssignmentBox(props:Props){
                     }
                 }
             );
+        fetch(base_url+'/recordActivities/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+'resume',
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}});
     }
     function saveVM(){
-        fetch('/saveTemplate/'+props.entry_no+'/'+props.course_id+'/'+props.asmt_id,
-        {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+        fetch(base_url+'/saveTemplate/'+props.entry_no+'/'+props.course_id+'/'+props.asmt_id,
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
         ).then(
             response =>response.json()
         ).then(
@@ -71,11 +86,13 @@ function TaAssignmentBox(props:Props){
             }
         );
         setVMstate("SAVED");
+        fetch(base_url+'/recordActivities/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+'save',
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}});
     }
 
     function startFresh(){
-        fetch('/startFresh/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
-            {headers:{token:`${token}`,entry_no:`${entry_no}`,role:`${role}`}}
+        fetch(base_url+'/startFresh/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+props.iso,
+            {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}
             ).then(
                 response => response.json()
             ).then(
@@ -86,7 +103,9 @@ function TaAssignmentBox(props:Props){
                         setVMstate("RUNNING");
                     }
                 }
-            );        
+            );
+        fetch(base_url+'/recordActivities/'+entry_no+'/'+props.course_id+'/'+props.asmt_id+'/'+'start_iso',
+        {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}});
     }
 
     // function selectISO(name: string){
@@ -104,7 +123,7 @@ function TaAssignmentBox(props:Props){
         <Paper elevation={3}>
             <Box padding={1}>
             <Typography variant='h5' component='h2'>Setup template VM</Typography>
-            <Typography variant='body1'>This is optional, you can do this later also.</Typography>
+            <Typography variant='body1'>Following is optional.</Typography>
             <Box padding={1}>
             <br></br>
             
@@ -113,7 +132,7 @@ function TaAssignmentBox(props:Props){
             <Button disabled={VMstate==='RUNNING'} variant='contained' color='primary' startIcon={<PlayArrow/>} onClick={startFresh} sx={{m:1}} size="small">
                 Start ISO
             </Button>
-            <Button disabled={VMstate==="RUNNING"} variant='contained' color='primary' onClick={resumeTemplate} startIcon={<RestartAlt/>} sx={{m:1}} size="small">
+            <Button disabled={true || VMstate==="RUNNING"} variant='contained' color='primary' onClick={resumeTemplate} startIcon={<RestartAlt/>} sx={{m:1}} size="small">
                 Resume Template
             </Button>
             <Button disabled={VMstate==="PAUSED"} variant='contained' color='primary' onClick={saveVM} startIcon={<Save/>} sx={{m:1}} size="small">
@@ -122,7 +141,9 @@ function TaAssignmentBox(props:Props){
             <br></br>
             {VMstate==='RUNNING' && 
                 <>
-                <Typography variant='body1'> Use command 'ssh {entry_no+'@192.168.'}{200+VMID}{'.2'}'</Typography>
+                <Typography variant='body1'>ssh into the dkstra using col732_all@dkstra.cse.iitd.ac.in, password: col732_all</Typography>
+                <br></br>
+                <Typography variant='body1'> Use command on dkstra 'ssh {entry_no+'@192.168.'}{200+VMID}{'.2'}'</Typography>
                 <br></br>
                 <Typography variant='body1'>Password : {password}</Typography>
                 </>

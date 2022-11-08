@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { base_url } from "../components/config";
 
 //TODO - differentiate the error types and provide detailed alert
 
@@ -47,7 +48,7 @@ export const SignUp = () => {
       return;
     }
 
-    axios.post('/user/signup', {
+    axios.post(base_url+'/user/signup', {
       name: target.name.value, entry_no: target.entry_no.value, role: role,
       password: target.password.value
     }).then(res => {
@@ -55,7 +56,7 @@ export const SignUp = () => {
       if (res.status === 201) {
         setFail('');
         setSuccess('Sign up successful')
-        navigate('/Dashboard', { state: { entry_no: target.entry_no.value, role: role } })
+        navigate('/', { state: { entry_no: target.entry_no.value, role: role } })
       }else{
         setFail('Sign up failed');
         setSuccess('');
@@ -69,7 +70,7 @@ export const SignUp = () => {
 
   return (
     <Container maxWidth="xs">
-      <Box alignItems={"center"} display={"flex"} flexDirection={"column"} sx={{ mt: 10 }}>
+      <Box alignItems={"center"} display={"flex"} flexDirection={"column"} sx={{ mt: 10, boxShadow:2, padding:3 }}>
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
@@ -120,9 +121,9 @@ export const SignUp = () => {
         </Box>
         <Grid container>
           <Grid item>
-            <Link href="/" variant="body2">
+            <Button onClick={()=>{navigate('/')}} style={{textTransform: 'none'}}>
               {"Go to sign in page"}
-            </Link>
+            </Button>
           </Grid>
         </Grid>
         {fail !== '' && <Alert severity="error">{fail}</Alert>}
