@@ -38,8 +38,9 @@ function CoursePage(){
                     for (let i = 0; i<val.asmts.length; i++) {
                         temp.push(val.asmts[i]);
                     }
+                    temp = temp.sort((a, b) => b.end_time - a.end_time);
                     setAst_ids(temp);
-                    console.log('fetched asses',val,fetched.current);
+                    //console.log('fetched asmts',val,fetched.current);
                     fetched.current=true;
                 }
             }
@@ -53,9 +54,10 @@ function CoursePage(){
             navigate('/ManageAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
         }else{
             let now = dayjs().unix()
-            if(ast.start_time <= now && now<=ast.end_time){
+            if(true || ast.start_time <= now && now<=ast.end_time){
                 navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role,
-                     course_id:course_id,asmt_id:ast.asmt_id, iso:ast.iso, pdf_link:ast.pdf_link}});
+                     course_id:course_id,asmt_id:ast.asmt_id, iso:ast.iso, pdf_link:ast.pdf_link,
+                      start_time:ast.start_time, end_time:ast.end_time}});
             }else{
                 if(ast.start_time>now){
                     window.alert('Assignment not yet started')

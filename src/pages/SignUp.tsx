@@ -52,7 +52,6 @@ export const SignUp = () => {
       name: target.name.value, entry_no: target.entry_no.value, role: role,
       password: target.password.value
     }).then(res => {
-      console.log(res);
       if (res.status === 201) {
         setFail('');
         setSuccess('Sign up successful')

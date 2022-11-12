@@ -6,7 +6,11 @@ type Props = {
     role:string,
     course_id:string,
     asmt_id:string,
-    iso:string
+    iso:string,
+    start_time:number,
+    end_time:number,
+    submitted:boolean,
+    setSubmitted:(val: boolean) => void
 }
 function VersionTree(props:Props){
     /*
@@ -18,7 +22,9 @@ function VersionTree(props:Props){
     */
    return (
     <>
-        <StudentAssignmentBox course_id={props.course_id} entry_no={props.entry_no} asmt_id={props.asmt_id} iso={props.iso}/>
+        <StudentAssignmentBox course_id={props.course_id} entry_no={props.entry_no} 
+        asmt_id={props.asmt_id} iso={props.iso} start_time={props.start_time} end_time={props.end_time}
+        submitted={props.submitted} setSubmitted={props.setSubmitted}/>
     </>
    );
 }

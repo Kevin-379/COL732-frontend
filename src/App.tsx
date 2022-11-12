@@ -1,7 +1,7 @@
 import {
   CssBaseline,
   ThemeProvider,
-  Switch, Box
+  Switch, Box, Paper
 } from "@mui/material";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { useState } from "react";
@@ -43,6 +43,11 @@ function App() {
           <Route path='/EditAsmt' element={<EditAsmt/>}/>
         </Routes>
       </HashRouter>
+      {
+      <Paper sx={{m:2, height:'50px'}} elevation={0}>
+
+      </Paper>
+      }
       <Box sx={{position: 'fixed', bottom:'5px', left:'10px' , height:'50px', width:'150px'}}>
       <LightMode fontSize={"small"} />
           <Switch onChange={(e) => setDarkMode(e.target.checked)}></Switch>

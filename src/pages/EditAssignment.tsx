@@ -43,7 +43,7 @@ function EditAsmt(){
                     setPdf(val.pdf_link);
                     setAsmtName(val.asmt_name);
                     setISO(val.iso);
-                    console.log('asmt_name', val.asmt_name);
+                    //console.log('asmt_name', val.asmt_name);
                     fetched.current=true;
                 }
             }
@@ -58,7 +58,6 @@ function EditAsmt(){
                   temp.push(val.isos[i]);
                 }
                 setISOs(temp);
-                console.log(val.isos);
                 fetchediso.current = true;
               }
             }

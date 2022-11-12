@@ -39,7 +39,7 @@ function Dashboard() {
     , [trigger])
 
   const handleAddCourse = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log('add course triggered');
+    //console.log('add course triggered');
     e.preventDefault();
     const target = e.target as typeof e.target & {
       course_id: { value: string };
@@ -102,7 +102,6 @@ function Dashboard() {
         }
       </Grid>
     </Container>
-    <a href={base_url+'/downloadCheck'}>Download</a>
     </>
   )
 

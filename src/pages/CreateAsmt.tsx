@@ -37,7 +37,7 @@ function CreateAsmt(){
               }
               setISOs(temp);
               fetched.current = true;
-              console.log(ISOs);
+              //console.log(ISOs);
             }
           }
     

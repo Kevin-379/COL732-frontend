@@ -31,7 +31,6 @@ export const SignIn = () => {
       };
       axios.post(base_url+'/user/login',{entry_no:target.entry_no.value, role: role,
         password:target.password.value}).then(res =>{
-          console.log(res)
           if(res.status === 201){
             console.log("Login successful");
             window.sessionStorage.setItem('token', res.data.token);

@@ -78,7 +78,7 @@ function TaAssignmentBox(props:Props){
             response =>response.json()
         ).then(
             (val) => {
-                console.log(val)
+                //console.log(val)
                 if(val.message==='paused'){
                     setPassword('');
                     setVMstate("PAUSED");

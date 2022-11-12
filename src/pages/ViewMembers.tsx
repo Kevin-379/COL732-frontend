@@ -34,6 +34,28 @@ function ViewMembers(){
     const entry_no=location.state.entry_no;
     const role=location.state.role;
     const token = window.sessionStorage.getItem('token');
+
+    function comp(a: member, b:member){
+        if(a.role=== 'Instructor'){
+            return 1;
+        }
+        if(b.role === 'Instructor'){
+            return -1;
+        }if(a.role=== 'TA'){
+            return 1;
+        }
+        if(b.role === 'TA'){
+            return -1;
+        }
+        if(a.entry_no<b.entry_no){
+            return 1;
+        }
+        if(a.name < b.name){
+            return 1;
+        }
+        return 0;
+    }
+
     useEffect(()=>{
         fetch(base_url+'/getAllMembers/'+course_id,
         {headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}}).then(
@@ -45,8 +67,8 @@ function ViewMembers(){
                     for (let i = 0; i<val.members.length; i++) {
                         temp.push(val.members[i]);
                     }
+                    temp = temp.sort((a, b) => comp(b,a));
                     setMList(temp);
-                    console.log('fetched mems',val,fetched.current);
                     fetched.current=true;
                 }
             }
@@ -55,7 +77,6 @@ function ViewMembers(){
 
     const addStudents = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('add student triggered')
         const target = e.target as typeof e.target & {
             entry_no: {value:string};
         };
@@ -73,7 +94,6 @@ function ViewMembers(){
     }
     const addTA = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('add student triggered')
         const target = e.target as typeof e.target & {
             entry_no: {value:string};
         };
@@ -92,13 +112,13 @@ function ViewMembers(){
 
     function remove(Role:string,entry:string){
         fetch(base_url+'/removeMember/'+entry+'/'+Role+'/'+course_id,{headers:{token:`${token}`,entry:`${entry_no}`,role:`${role}`}})
-        .then((res) => {console.log(res); setTrigger(!trigger); fetched.current=false;})
+        .then((res) => { setTrigger(!trigger); fetched.current=false;})
     }
     
     function renderMember(mem:member){
         return (
             <TableRow
-              key={mem.entry_no}
+              key={mem.entry_no+mem.role}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
                 <TableCell align="center">{mem.name}</TableCell>
