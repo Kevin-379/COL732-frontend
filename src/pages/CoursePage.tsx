@@ -54,7 +54,7 @@ function CoursePage(){
             navigate('/ManageAssignmentPage',{state:{entry_no:entry_no, role:role, course_id:course_id,asmt_id:ast.asmt_id}});
         }else{
             let now = dayjs().unix()
-            if(true || ast.start_time <= now && now<=ast.end_time){
+            if(ast.start_time <= now){
                 navigate('/StudentAssignmentPage',{state:{entry_no:entry_no, role:role,
                      course_id:course_id,asmt_id:ast.asmt_id, iso:ast.iso, pdf_link:ast.pdf_link,
                       start_time:ast.start_time, end_time:ast.end_time}});
